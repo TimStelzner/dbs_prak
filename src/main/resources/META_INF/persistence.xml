@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1"
+             xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+
+    <!-- Name identifies the persistence unit when instantiating an EntityManagerFactory-->
+    <persistence-unit name="dbs_prak">
+        <!-- provider indicates which JPA implementation should be used -->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <properties>
+            <!-- Database Driver -->
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+            <!-- Database URL -->
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://ec2-54-75-244-161.eu-west-1.compute.amazonaws.com" />
+            <!-- Database User -->
+            <property name="javax.persistence.jdbc.user" value="cyinytmuchapmd" />
+            <!-- Database Password -->
+            <property name="javax.persistence.jdbc.password" value="0e669bc35dac65d5a1dbea8af33a6d5ea4fc727e09d1be1f7d4ef239fd592b6f" />
+            <!-- Database Dialect -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL82Dialect"/>
+            <!-- create / create-drop / update -->
+            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <!-- Disables autocommit for the JDBC connections in the connection pool. Should always be false. Autocommit mode allows each individual SQL statement to be executed in its own transaction.-->
+            <property name="hibernate.connection.autocommit" value="false"/>
+        </properties>
+    </persistence-unit>
+</persistence>
