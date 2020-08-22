@@ -17,7 +17,7 @@ public class Place implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", unique = true)
+    @Column(unique = true)
     private int id;
 
     @Column()
