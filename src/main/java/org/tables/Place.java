@@ -20,15 +20,15 @@ public class Place implements Serializable {
     @Column(name = "id", unique = true)
     private int id;
 
-    @Column(name = "name")
+    @Column()
     private String name;
 
-    @Column(name = "url")
+    @Column()
     private String url;
 
-    @Column(name = "type")
+    @Column()
     private String type;
 
-    @Column(name = "is_part_of")
-    private int is_part_of;
+    @Column(nullable = true)
+    private Integer is_part_of;
 }
