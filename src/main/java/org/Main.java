@@ -1,6 +1,7 @@
 package org;
 
 import lombok.extern.slf4j.Slf4j;
+import org.tables.City;
 import org.tables.Place;
 
 import javax.persistence.*;
@@ -28,14 +29,14 @@ public class Main {
         }
 
          */
-        getPlaces();
+        getCity(111);
 
 
         ENTITY_MANAGER_FACTORY.close();
         log.debug("<-- Main().");
     }
 
-    public static void addPlace(int id, String name, String url, String type, int is_part_of) {
+    public static void addPlace(int id, String name, String url, String type, long is_part_of) {
         log.debug("--> addPlace().");
 
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
@@ -85,6 +86,7 @@ public class Main {
         // Run query
         try {
             place = typedQuery.getSingleResult();
+
             log.debug("id = {} \t name = {} \t type = {} \t is part of = {}",
                     place.getId(),
                     place.getName(),
@@ -203,6 +205,37 @@ public class Main {
         } finally {
             log.debug("<-- deletePlace().");
             entityManager.close();
+        }
+    }
+
+    public static void getCity(int id) {
+        log.debug("--> getPlace().");
+
+        // Setup variables
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        City city = null;
+
+        // Setup query
+        String query = "SELECT c FROM City c WHERE c.id = :id";
+        TypedQuery<City> typedQuery = entityManager.createQuery(query, City.class);
+        typedQuery.setParameter("id", id);
+
+        // Run query
+        try {
+            city = typedQuery.getSingleResult();
+
+            log.debug("id = {} \t name = {} \t type = {} \t is part of = {}",
+                    city.getId(),
+                    city.getName(),
+                    city.getType(),
+                    city.getIs_part_of());
+        } catch (PersistenceException e) {
+            log.error("Database persistence error.", e);
+        } catch (Exception e) {
+            log.error("Something went wrong here.", e);
+        } finally {
+            entityManager.close();
+            log.debug("<-- getPlace().");
         }
     }
 

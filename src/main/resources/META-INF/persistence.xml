@@ -10,6 +10,9 @@
         <!-- provider indicates which JPA implementation should be used. Requires hibernate-core jsp -->
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>org.tables.Place</class>
+        <class>org.tables.City</class>
+        <class>org.tables.Country</class>
+        <class>org.tables.Continent</class>
         <properties>
             <!-- Database Driver -->
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
@@ -29,6 +32,7 @@
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <!-- Disables autocommit for the JDBC connections in the connection pool. Should always be false. Autocommit mode allows each individual SQL statement to be executed in its own transaction.-->
             <property name="hibernate.connection.autocommit" value="false"/>
+            <!-- <property name="hibernate.show_sql" value="true"/> -->
         </properties>
     </persistence-unit>
 </persistence>

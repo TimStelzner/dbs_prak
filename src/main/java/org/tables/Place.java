@@ -1,20 +1,19 @@
 package org.tables;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * Implements place table.
  */
-@Entity
 @Slf4j
-@Data
-public class Place implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+@Getter
+@Setter
+@MappedSuperclass
+public class Place {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true)
@@ -29,6 +28,6 @@ public class Place implements Serializable {
     @Column()
     private String type;
 
-    @Column(nullable = true)
-    private Integer is_part_of;
+    @Column()
+    private Long is_part_of;
 }

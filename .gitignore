@@ -1,5 +1,6 @@
 .gradle
 /build/
+.idea
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -20,3 +21,4 @@ gradle-app.setting
 /src/main/resources/log4j.properties
 /lombok.config
 /settings.gradle
+/.idea/modules/dbs_prak.iml
