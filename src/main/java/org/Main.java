@@ -3,10 +3,9 @@ package org;
 import lombok.extern.slf4j.Slf4j;
 import org.tables.City;
 import org.tables.Place;
+import org.utilities.TransactionUtils;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Main class for testing connecting with our database.
@@ -14,7 +13,7 @@ import java.util.List;
 @Slf4j
 public class Main {
     // Note, that name must match persistence-unit name in persistence.xml
-    private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory("dbs");
+    public static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory("dbs");
 
     public static void main(String[] args) {
         log.debug("--> Main().");
@@ -29,7 +28,9 @@ public class Main {
         }
 
          */
-        getCity(111);
+        TransactionUtils.getUniversity(1614);
+        TransactionUtils.getPerson(94);
+        TransactionUtils.getPerson(65);
 
 
         ENTITY_MANAGER_FACTORY.close();
@@ -71,6 +72,8 @@ public class Main {
         }
     }
 
+
+/*
     public static void getPlace(int id) {
         log.debug("--> getPlace().");
 
@@ -102,6 +105,9 @@ public class Main {
         }
     }
 
+ */
+
+    /*
     public static void getPlaces() {
         log.debug("--> getPlaces().");
 
@@ -134,6 +140,8 @@ public class Main {
             log.debug("<-- getPlaces().");
         }
     }
+
+     */
 
     public static void changeName(int id, String name) {
         log.debug("--> changeName().");
