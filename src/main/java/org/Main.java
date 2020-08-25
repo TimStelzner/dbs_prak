@@ -1,7 +1,6 @@
 package org;
 
 import lombok.extern.slf4j.Slf4j;
-import org.tables.City;
 import org.tables.Place;
 import org.utilities.TransactionUtils;
 
@@ -18,26 +17,24 @@ public class Main {
     public static void main(String[] args) {
         log.debug("--> Main().");
 
-        /*
         try {
-            Class.forName("org.postgresql.Driver");
-            EntityManagerFactory emf = Persistence.createEntityManagerFactory("dbs");
-            emf.close();
-        } catch (ClassNotFoundException e) {
-            log.error("Class not found.", e);
+            TransactionUtils.getUniversity(1614);
+            TransactionUtils.getPerson(94);
+            TransactionUtils.getPerson(65);
+            TransactionUtils.getCity(553);
+            TransactionUtils.getForum(187);
+        } catch (PersistenceException e) {
+            log.error("Database persistence error.", e);
+        } catch (Exception e) {
+            log.error("Something went wrong here.", e);
+        } finally {
+            ENTITY_MANAGER_FACTORY.close();
         }
 
-         */
-        TransactionUtils.getUniversity(1614);
-        TransactionUtils.getPerson(94);
-        TransactionUtils.getPerson(65);
-
-
-        ENTITY_MANAGER_FACTORY.close();
         log.debug("<-- Main().");
     }
 
-    public static void addPlace(int id, String name, String url, String type, long is_part_of) {
+    public static void addPlace(Long id, String name, String url, String type, long is_part_of) {
         log.debug("--> addPlace().");
 
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
@@ -216,35 +213,6 @@ public class Main {
         }
     }
 
-    public static void getCity(int id) {
-        log.debug("--> getPlace().");
 
-        // Setup variables
-        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        City city = null;
-
-        // Setup query
-        String query = "SELECT c FROM City c WHERE c.id = :id";
-        TypedQuery<City> typedQuery = entityManager.createQuery(query, City.class);
-        typedQuery.setParameter("id", id);
-
-        // Run query
-        try {
-            city = typedQuery.getSingleResult();
-
-            log.debug("id = {} \t name = {} \t type = {} \t is part of = {}",
-                    city.getId(),
-                    city.getName(),
-                    city.getType(),
-                    city.getIs_part_of());
-        } catch (PersistenceException e) {
-            log.error("Database persistence error.", e);
-        } catch (Exception e) {
-            log.error("Something went wrong here.", e);
-        } finally {
-            entityManager.close();
-            log.debug("<-- getPlace().");
-        }
-    }
 
 }

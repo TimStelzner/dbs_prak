@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 public class City extends Place {
 
     @ManyToOne(targetEntity = Country.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "is_part_of", referencedColumnName = "id")
+    // @JoinColumn(name = "is_part_of", referencedColumnName = "id")
+    @JoinColumn(referencedColumnName = "id")
     private Long is_part_of;
 }

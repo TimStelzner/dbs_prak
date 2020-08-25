@@ -16,6 +16,7 @@
         <class>org.tables.Organisation</class>
         <class>org.tables.University</class>
         <class>org.tables.Person</class>
+        <class>org.tables.Forum</class>
         <properties>
             <!-- Database Driver -->
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />

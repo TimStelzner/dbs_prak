@@ -38,11 +38,13 @@ public class Person extends BaseEntity {
     private Integer city_id;
 
     @Type(type = "string-array")
-    @Column(name = "emails", columnDefinition = "text[]")
+    //@Column(name = "emails", columnDefinition = "text[]")
+    @Column(columnDefinition = "text[]")
     private String[] emails;
 
     @Type(type = "string-array")
-    @Column(name = "speaks", columnDefinition = "text[]", nullable = false)
+    // @Column(name = "speaks", columnDefinition = "text[]", nullable = false)
+    @Column(columnDefinition = "text[]", nullable = false)
     private String[] speaks;
 
 

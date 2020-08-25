@@ -17,7 +17,7 @@ public class Place {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true)
-    private int id;
+    private Long id;
 
     @Column()
     private String name;
