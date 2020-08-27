@@ -2,14 +2,13 @@ package org.utilities;
 
 import lombok.extern.slf4j.Slf4j;
 import org.Main;
-import org.tables.City;
-import org.tables.Forum;
-import org.tables.Person;
-import org.tables.University;
+import org.tables.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
+import java.util.Iterator;
+import java.util.Set;
 
 @Slf4j
 public class TransactionUtils {
@@ -36,6 +35,31 @@ public class TransactionUtils {
 
         entityManager.close();
         log.debug("<-- getUniversity().");
+    }
+
+    public static void getCompany(long id) throws PersistenceException {
+        log.debug("--> getCompany().");
+
+        // Setup variables
+        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
+        Company company = null;
+
+        // Setup query
+        String query = "SELECT c FROM Company c WHERE c.id = :id";
+        TypedQuery<Company> typedQuery = entityManager.createQuery(query, Company.class);
+        typedQuery.setParameter("id", id);
+
+        // Run query
+        company = typedQuery.getSingleResult();
+
+        log.debug("id = {} \t name = {} \t type = {} \t country_id = {}",
+                company.getId(),
+                company.getName(),
+                company.getCountry_id()
+        );
+
+        entityManager.close();
+        log.debug("<-- getCompany().");
     }
 
     public static void getPerson(long id) throws PersistenceException {
@@ -117,5 +141,110 @@ public class TransactionUtils {
         entityManager.close();
         log.debug("<-- getForum().");
     }
+
+    public static void getPersonIsMemberOfForums(long id) throws PersistenceException {
+        log.debug("--> getPersonIsMemberOfForums().");
+
+        // Setup variables
+        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
+        Person person = null;
+
+        // Setup query
+        String query = "SELECT c FROM Person c WHERE c.id = :id";
+        TypedQuery<Person> typedQuery = entityManager.createQuery(query, Person.class);
+        typedQuery.setParameter("id", id);
+
+        // Run query
+        person = typedQuery.getSingleResult();
+        Set<Forum> forums = person.getForums();
+        Iterator<Forum> iterator = forums.iterator();
+
+        log.debug("id = {} \t name = {} is members of these forums:", person.getId(), person.getName());
+        while (iterator.hasNext()) {
+            Forum next = iterator.next();
+            log.debug("id = [{}] \t name = [{}] ", next.getId(), next.getTitle());
+        }
+
+        entityManager.close();
+        log.debug("<-- getPersonIsMemberOfForums().");
+    }
+
+    public static void getComment(Long id) throws PersistenceException {
+        log.debug("--> getComment().");
+
+        // Setup variables
+        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
+        Comment comment = null;
+
+        // Setup query
+        String query = "SELECT c FROM Comment c WHERE c.id = :id";
+        TypedQuery<Comment> typedQuery = entityManager.createQuery(query, Comment.class);
+        typedQuery.setParameter("id", id);
+
+        // Run query
+        comment = typedQuery.getSingleResult();
+
+        log.debug("id = {} \t creation date = {} \t content = {} \t reply of post = {} \t reply of comment = {}",
+                comment.getId(),
+                comment.getCreation_date(),
+                comment.getContent(),
+                comment.getReply_of_post(),
+                comment.getReply_of_comment()
+        );
+
+        entityManager.close();
+        log.debug("<-- getComment().");
+    }
+
+    public static void getPost(Long id) throws PersistenceException {
+        log.debug("--> getPost().");
+
+        // Setup variables
+        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
+        Post post = null;
+
+        // Setup query
+        String query = "SELECT c FROM Post c WHERE c.id = :id";
+        TypedQuery<Post> typedQuery = entityManager.createQuery(query, Post.class);
+        typedQuery.setParameter("id", id);
+
+        // Run query
+        post = typedQuery.getSingleResult();
+
+        log.debug("id = {} \t creation date = {} \t content = {} ",
+                post.getId(),
+                post.getCreation_date(),
+                post.getContent()
+        );
+
+        entityManager.close();
+        log.debug("<-- getPost().");
+    }
+
+    public static void getTag(Long id) throws PersistenceException {
+        log.debug("--> getTag().");
+
+        // Setup variables
+        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
+        Tag tag = null;
+
+        // Setup query
+        String query = "SELECT c FROM Tag c WHERE c.id = :id";
+        TypedQuery<Tag> typedQuery = entityManager.createQuery(query, Tag.class);
+        typedQuery.setParameter("id", id);
+
+        // Run query
+        tag = typedQuery.getSingleResult();
+
+        log.debug("id = {} \t name = {} \t url = {} ",
+                tag.getId(),
+                tag.getName(),
+                tag.getUrl()
+        );
+
+        entityManager.close();
+        log.debug("<-- getTag().");
+    }
+
 
 }

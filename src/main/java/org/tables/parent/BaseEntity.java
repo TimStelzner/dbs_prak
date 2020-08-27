@@ -1,4 +1,4 @@
-package org.tables;
+package org.tables.parent;
 
 import com.vladmihalcea.hibernate.type.array.StringArrayType;
 import lombok.Getter;

@@ -1,22 +1,20 @@
-package org.tables;
+package org.tables.parent;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 
 /**
  * Implements place table.
  */
-@Slf4j
 @Getter
 @Setter
 @MappedSuperclass
 public class Place {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private Long id;
 
     @Column()

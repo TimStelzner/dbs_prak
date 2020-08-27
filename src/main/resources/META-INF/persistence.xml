@@ -9,7 +9,7 @@
     <persistence-unit name="dbs" transaction-type="RESOURCE_LOCAL">
         <!-- provider indicates which JPA implementation should be used. Requires hibernate-core jsp -->
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>org.tables.Place</class>
+        <class>org.tables.parent.Place</class>
         <class>org.tables.City</class>
         <class>org.tables.Country</class>
         <class>org.tables.Continent</class>
@@ -17,15 +17,22 @@
         <class>org.tables.University</class>
         <class>org.tables.Person</class>
         <class>org.tables.Forum</class>
+        <class>org.tables.parent.Message</class>
+        <class>org.tables.Comment</class>
+        <class>org.tables.Post</class>
+        <class>org.tables.Company</class>
+        <class>org.tables.Tag</class>
         <properties>
             <!-- Database Driver -->
-            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <!-- Database URL -->
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://ec2-54-75-244-161.eu-west-1.compute.amazonaws.com/da4qjh8735ag9"/>
+            <property name="javax.persistence.jdbc.url"
+                      value="jdbc:postgresql://ec2-54-75-244-161.eu-west-1.compute.amazonaws.com/da4qjh8735ag9"/>
             <!-- Database User -->
-            <property name="javax.persistence.jdbc.user" value="cyinytmuchapmd" />
+            <property name="javax.persistence.jdbc.user" value="cyinytmuchapmd"/>
             <!-- Database Password -->
-            <property name="javax.persistence.jdbc.password" value="0e669bc35dac65d5a1dbea8af33a6d5ea4fc727e09d1be1f7d4ef239fd592b6f" />
+            <property name="javax.persistence.jdbc.password"
+                      value="0e669bc35dac65d5a1dbea8af33a6d5ea4fc727e09d1be1f7d4ef239fd592b6f"/>
             <!-- Database Dialect -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL95Dialect"/>
             <!-- create / create-drop / update -->

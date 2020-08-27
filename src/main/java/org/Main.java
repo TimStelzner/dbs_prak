@@ -1,7 +1,7 @@
 package org;
 
 import lombok.extern.slf4j.Slf4j;
-import org.tables.Place;
+import org.tables.parent.Place;
 import org.utilities.TransactionUtils;
 
 import javax.persistence.*;
@@ -18,11 +18,26 @@ public class Main {
         log.debug("--> Main().");
 
         try {
+            /*
             TransactionUtils.getUniversity(1614);
             TransactionUtils.getPerson(94);
             TransactionUtils.getPerson(65);
             TransactionUtils.getCity(553);
             TransactionUtils.getForum(187);
+            TransactionUtils.getPersonIsMemberOfForums(65);
+
+            TransactionUtils.getComment(34359744978L);
+            TransactionUtils.getComment(34359744975L);
+
+
+            TransactionUtils.getPost(8488L);
+            TransactionUtils.getPost(8717L);
+            TransactionUtils.getCompany(3L);
+
+            */
+            TransactionUtils.getTag(1L);
+
+
         } catch (PersistenceException e) {
             log.error("Database persistence error.", e);
         } catch (Exception e) {

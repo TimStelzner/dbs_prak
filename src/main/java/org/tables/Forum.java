@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -23,5 +25,11 @@ public class Forum {
 
     @Column(nullable = false)
     private Long person_id;
+
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(name = "forum_has_member",
+            joinColumns = {@JoinColumn(name = "forum_id")},
+            inverseJoinColumns = {@JoinColumn(name = "person_id")})
+    Set<Person> persons = new HashSet<>();
 
 }

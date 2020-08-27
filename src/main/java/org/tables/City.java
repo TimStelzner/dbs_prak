@@ -1,15 +1,13 @@
 package org.tables;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import org.tables.parent.Place;
+
+import javax.persistence.*;
 
 @Entity
 public class City extends Place {
 
     @ManyToOne(targetEntity = Country.class, fetch = FetchType.LAZY)
-    // @JoinColumn(name = "is_part_of", referencedColumnName = "id")
-    @JoinColumn(referencedColumnName = "id")
+    @JoinColumn(name = "is_part_of", foreignKey = @ForeignKey(name = "comment_reply_of_comment_fkey"))
     private Long is_part_of;
 }

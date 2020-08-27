@@ -4,11 +4,15 @@ package org.tables;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+import org.tables.parent.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity @Getter @Setter
 public class Person extends BaseEntity {
@@ -38,16 +42,14 @@ public class Person extends BaseEntity {
     private Integer city_id;
 
     @Type(type = "string-array")
-    //@Column(name = "emails", columnDefinition = "text[]")
     @Column(columnDefinition = "text[]")
     private String[] emails;
 
     @Type(type = "string-array")
-    // @Column(name = "speaks", columnDefinition = "text[]", nullable = false)
     @Column(columnDefinition = "text[]", nullable = false)
     private String[] speaks;
 
-
-
+    @ManyToMany(mappedBy = "persons")
+    private Set<Forum> forums = new HashSet<>();
 
 }
