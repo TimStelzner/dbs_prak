@@ -24,4 +24,10 @@ public class Comment extends Message {
     @OneToMany(mappedBy = "reply_of_comment")
     private Set<Comment> comments;
 
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(name = "comment_has_tag",
+            joinColumns = {@JoinColumn(name = "comment_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id")})
+    private Set<Tag> tags;
+
 }

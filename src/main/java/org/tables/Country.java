@@ -19,4 +19,7 @@ public class Country extends Place {
 
     @OneToMany(mappedBy = "country_id")
     private Set<Company> companies;
+
+    @OneToMany(mappedBy = "is_part_of")
+    private Set<City> cities;
 }

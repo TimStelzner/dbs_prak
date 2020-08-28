@@ -2,12 +2,15 @@ package org.utilities;
 
 import lombok.extern.slf4j.Slf4j;
 import org.Main;
+import org.apache.commons.text.WordUtils;
 import org.tables.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -244,6 +247,69 @@ public class TransactionUtils {
 
         entityManager.close();
         log.debug("<-- getTag().");
+    }
+
+    public static void getCommentHasTag(Long id) throws PersistenceException {
+        log.debug("--> getTag().");
+
+        // Setup variables
+        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
+        Tag tag = null;
+
+        // Setup query
+        String query = "SELECT c FROM Tag c WHERE c.id = :id";
+        TypedQuery<Tag> typedQuery = entityManager.createQuery(query, Tag.class);
+        typedQuery.setParameter("id", id);
+
+        // Run query
+        tag = typedQuery.getSingleResult();
+
+        log.debug("id = {} \t name = {} \t url = {} ",
+                tag.getId(),
+                tag.getName(),
+                tag.getUrl()
+        );
+
+        entityManager.close();
+        log.debug("<-- getTag().");
+    }
+
+    public static void selectAll(String table) throws PersistenceException, ClassNotFoundException {
+        log.debug("--> select({}).", table);
+
+        // Setup variables
+        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
+        // Class cls = Class.forName(table);
+        // log.debug("cls = {}", cls);
+
+        StringBuilder query = new StringBuilder("from ");
+        query.append(table);
+
+        Query typedQuery = entityManager.createQuery(query.toString());
+        List<?> resultList = typedQuery.getResultList();
+        String capitalize = WordUtils.capitalize(table);
+        log.debug("capitalize = {}", capitalize);
+
+        switch (table) {
+            case "City":
+                printCities((List<City>) resultList);
+                break;
+        }
+
+
+    }
+
+    private static void printCities(List<City> cities) {
+        log.debug("--> printCities().");
+        for (City city : cities) {
+            log.debug("name = {} \t id = {} \t type = {} \t part of = {}",
+                    city.getName(),
+                    city.getId(),
+                    city.getType(),
+                    city.getIs_part_of()
+            );
+        }
+        log.debug("<-- printCities().");
     }
 
 

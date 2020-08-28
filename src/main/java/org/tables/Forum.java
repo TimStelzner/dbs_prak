@@ -30,6 +30,12 @@ public class Forum {
     @JoinTable(name = "forum_has_member",
             joinColumns = {@JoinColumn(name = "forum_id")},
             inverseJoinColumns = {@JoinColumn(name = "person_id")})
-    Set<Person> persons = new HashSet<>();
+    private Set<Person> persons = new HashSet<>();
 
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(name = "forum_has_tag",
+            joinColumns = {@JoinColumn(name = "forum_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id")}
+    )
+    private Set<Tag> tags = new HashSet<>();
 }

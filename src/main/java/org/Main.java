@@ -22,7 +22,7 @@ public class Main {
             TransactionUtils.getUniversity(1614);
             TransactionUtils.getPerson(94);
             TransactionUtils.getPerson(65);
-            TransactionUtils.getCity(553);
+
             TransactionUtils.getForum(187);
             TransactionUtils.getPersonIsMemberOfForums(65);
 
@@ -34,8 +34,11 @@ public class Main {
             TransactionUtils.getPost(8717L);
             TransactionUtils.getCompany(3L);
 
-            */
+
             TransactionUtils.getTag(1L);
+            TransactionUtils.selectAll("City");
+*/
+            TransactionUtils.getCity(356);
 
 
         } catch (PersistenceException e) {
