@@ -2,13 +2,13 @@ package org.tables.parent;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.tables.Country;
-import org.tables.Person;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 
+//@Entity
+//@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @MappedSuperclass
 @Getter
 @Setter
@@ -18,8 +18,8 @@ public class Message {
     @Column(unique = true, nullable = false)
     private Long id;
 
-    @Column
-    private Timestamp creation_date;
+    @Column(name = "creation_date")
+    private Timestamp creationDate;
 
     @Column
     private String content;
@@ -27,17 +27,20 @@ public class Message {
     @Column
     private Long length;
 
-    @Column
-    private String browser_used;
+    @Column(name = "browser_used")
+    private String browserUsed;
 
-    @Column
-    private String location_ip;
-
+    @Column(name = "location_ip")
+    private String locationIp;
+/*
     @ManyToOne(targetEntity = Person.class, fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = @ForeignKey(name = "comment_person_id_fkey"))
-    private Long person_id;
+    @JoinColumn(name = "person_id", foreignKey = @ForeignKey(name = "message_person_id_fkey"))
+    private Long personId;
 
     @ManyToOne(targetEntity = Country.class, fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = @ForeignKey(name = "comment_country_fkey"))
-    private Long country_id;
+    @JoinColumn(name = "country_id", foreignKey = @ForeignKey(name = "message_country_id_fkey"))
+    private Long countryId;
+
+
+ */
 }

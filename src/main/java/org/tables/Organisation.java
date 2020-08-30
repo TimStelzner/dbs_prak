@@ -15,5 +15,4 @@ public class Organisation {
 
     @Column()
     private String name;
-
 }

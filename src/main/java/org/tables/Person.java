@@ -6,19 +6,19 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.tables.parent.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity @Getter @Setter
+@Entity
+@Getter
+@Setter
 public class Person extends BaseEntity {
 
-    @Column()
-    private Timestamp creation_date;
+    @Column(name = "creation_date")
+    private Timestamp creationDate;
 
     @Column()
     private String surname;
@@ -30,16 +30,16 @@ public class Person extends BaseEntity {
     private String gender;
 
     @Column
-    private Date date;
+    private Date birthday;
 
-    @Column
+    @Column(name = "browser_used")
     private String browser_used;
 
-    @Column
-    private String location_ip;
+    @Column(name = "location_ip")
+    private String locationIp;
 
-    @Column
-    private Integer city_id;
+    @Column(name = "city_id")
+    private Integer cityId;
 
     @Type(type = "string-array")
     @Column(columnDefinition = "text[]")
@@ -52,4 +52,6 @@ public class Person extends BaseEntity {
     @ManyToMany(mappedBy = "persons")
     private Set<Forum> forums = new HashSet<>();
 
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Post> post = new HashSet<>();
 }

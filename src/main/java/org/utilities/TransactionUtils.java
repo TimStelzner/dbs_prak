@@ -2,8 +2,9 @@ package org.utilities;
 
 import lombok.extern.slf4j.Slf4j;
 import org.Main;
-import org.apache.commons.text.WordUtils;
 import org.tables.*;
+import org.tables.composite.PersonHasInterest;
+import org.tables.composite.PersonWorksAt;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
@@ -34,7 +35,7 @@ public class TransactionUtils {
         log.debug("id = {} \t name = {} \t type = {} \t is part of = {}",
                 university.getId(),
                 university.getName(),
-                university.getCity_id());
+                university.getCity());
 
         entityManager.close();
         log.debug("<-- getUniversity().");
@@ -58,7 +59,7 @@ public class TransactionUtils {
         log.debug("id = {} \t name = {} \t type = {} \t country_id = {}",
                 company.getId(),
                 company.getName(),
-                company.getCountry_id()
+                company.getCountry()
         );
 
         entityManager.close();
@@ -114,10 +115,35 @@ public class TransactionUtils {
                 city.getId(),
                 city.getName(),
                 city.getType(),
-                city.getIs_part_of());
+                city.getIsPartOf());
 
         entityManager.close();
         log.debug("<-- getCity().");
+    }
+
+    public static void getPost(long id) throws PersistenceException {
+        log.debug("--> getPost().");
+
+        // Setup variables
+        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
+        Post post = null;
+
+        // Setup query
+        String query = "SELECT c FROM Post c WHERE c.id = :id";
+        TypedQuery<Post> typedQuery = entityManager.createQuery(query, Post.class);
+        typedQuery.setParameter("id", id);
+
+        // Run query
+        post = typedQuery.getSingleResult();
+
+        log.debug("id = {} \t content = {} \t person = {} \t country = {} \t forum = {}",
+                post.getId(),
+                post.getContent(),
+                post.getPerson(),
+                post.getCountry(),
+                post.getForum());
+        entityManager.close();
+        log.debug("<-- getPost().");
     }
 
     public static void getForum(long id) throws PersistenceException {
@@ -138,8 +164,8 @@ public class TransactionUtils {
         log.debug("id = {} \t title = {} \t created on = {} \t Moderator = {}",
                 forum.getId(),
                 forum.getTitle(),
-                forum.getCreation_date(),
-                forum.getPerson_id());
+                forum.getCreationDate(),
+                forum.getPersonId());
 
         entityManager.close();
         log.debug("<-- getForum().");
@@ -189,16 +215,17 @@ public class TransactionUtils {
 
         log.debug("id = {} \t creation date = {} \t content = {} \t reply of post = {} \t reply of comment = {}",
                 comment.getId(),
-                comment.getCreation_date(),
+                comment.getCreationDate(),
                 comment.getContent(),
-                comment.getReply_of_post(),
-                comment.getReply_of_comment()
+                comment.getReplyOfPost(),
+                comment.getReplyOfComment()
         );
 
         entityManager.close();
         log.debug("<-- getComment().");
     }
 
+    /*
     public static void getPost(Long id) throws PersistenceException {
         log.debug("--> getPost().");
 
@@ -216,13 +243,15 @@ public class TransactionUtils {
 
         log.debug("id = {} \t creation date = {} \t content = {} ",
                 post.getId(),
-                post.getCreation_date(),
+                post.getCreationDate(),
                 post.getContent()
         );
 
         entityManager.close();
         log.debug("<-- getPost().");
     }
+
+     */
 
     public static void getTag(Long id) throws PersistenceException {
         log.debug("--> getTag().");
@@ -274,7 +303,7 @@ public class TransactionUtils {
         log.debug("<-- getTag().");
     }
 
-    public static void selectAll(String table) throws PersistenceException, ClassNotFoundException {
+    public static void selectAll(String table) throws PersistenceException {
         log.debug("--> select({}).", table);
 
         // Setup variables
@@ -287,29 +316,163 @@ public class TransactionUtils {
 
         Query typedQuery = entityManager.createQuery(query.toString());
         List<?> resultList = typedQuery.getResultList();
-        String capitalize = WordUtils.capitalize(table);
-        log.debug("capitalize = {}", capitalize);
+        // String capitalize = WordUtils.capitalize(table);
+        // log.debug("capitalize = {}", capitalize);
 
         switch (table) {
             case "City":
                 printCities((List<City>) resultList);
                 break;
+            case "Country":
+                printCountries((List<Country>) resultList);
+                break;
+            case "Comment":
+                printComments((List<Comment>) resultList);
+                break;
+            case "University":
+                printUniversities((List<University>) resultList);
+                break;
+            case "Person":
+                printPersons((List<Person>) resultList);
+                break;
+            case "Forum":
+                printForums((List<Forum>) resultList);
+                break;
+            case "Post":
+                printPost((List<Post>) resultList);
+                break;
+            case "PersonWorksAt":
+                printWorksAt((List<PersonWorksAt>) resultList);
+            case "PersonHasInterest":
+                printHasInterest((List<PersonHasInterest>) resultList);
         }
-
-
     }
 
     private static void printCities(List<City> cities) {
         log.debug("--> printCities().");
         for (City city : cities) {
-            log.debug("name = {} \t id = {} \t type = {} \t part of = {}",
+            log.info("name = {} \t id = {} \t type = {} \t part of = {}",
                     city.getName(),
                     city.getId(),
                     city.getType(),
-                    city.getIs_part_of()
-            );
+                    city.getIsPartOf());
         }
         log.debug("<-- printCities().");
+    }
+
+    private static void printCountries(List<Country> countries) {
+        log.debug("--> printCountries().");
+        for (Country country : countries) {
+            log.info("name = {} \t id = {} \t type = {} \t part of = {}",
+                    country.getName(),
+                    country.getId(),
+                    country.getType(),
+                    country.getIsPartOf());
+        }
+        log.debug("<-- printCountries().");
+    }
+
+    private static void printComments(List<Comment> comments) {
+        log.debug("--> printCountries().");
+        for (int i = 0; i < comments.size(); i++) {
+            Comment comment = comments.get(i);
+            log.info("id = {} \t content = {} \t reply of post = {} \t reply of comment = {}",
+                    comment.getId(),
+                    comment.getContent(),
+                    comment.getReplyOfPost(),
+                    comment.getReplyOfComment()
+            );
+            if (i > 9) {
+                break;
+            }
+        }
+        log.debug("<-- printCountries().");
+    }
+
+    private static void printUniversities(List<University> universities) {
+        log.debug("--> printUniversities().");
+        for (University uni : universities) {
+            log.info("id = {} \t name = {} \t city id = {}",
+                    uni.getId(),
+                    uni.getName(),
+                    uni.getCity());
+        }
+        log.debug("<-- printUniversities().");
+    }
+
+    private static void printPersons(List<Person> persons) {
+        log.debug("--> printPersons().");
+
+        for (Person person : persons) {
+            log.info("name = {} \t gender = {} \t bday = {} \t joined = {} \t from = {}",
+                    person.getName(),
+                    person.getGender(),
+                    person.getBirthday(),
+                    person.getCreationDate(),
+                    person.getCityId());
+        }
+        log.debug("<-- printPersons().");
+    }
+
+    private static void printForums(List<Forum> forums) {
+        log.debug("--> printForums().");
+
+        for (Forum forum : forums) {
+            log.info("id = {} \t title = {} \t created = {} \t Moderator = {}",
+                    forum.getId(),
+                    forum.getTitle(),
+                    forum.getCreationDate(),
+                    forum.getPersonId());
+        }
+        log.debug("<-- printForums().");
+    }
+
+    private static void printPost(List<Post> posts) {
+        log.debug("--> printPost().");
+        int counter = 1;
+        for (Post post : posts) {
+            log.info("id = {} \t content = {} \t image = {} \t person = {} \t forum = {} \t country = {}",
+                    post.getId(),
+                    post.getContent(),
+                    post.getImageFile(),
+                    post.getPerson().getId(),
+                    post.getForum().getId(),
+                    post.getCountry().getId());
+            counter++;
+            if (counter > 20) {
+                break;
+            }
+        }
+        log.debug("<-- printPost().");
+    }
+
+    private static void printWorksAt(List<PersonWorksAt> persons) {
+        log.debug("--> printWorksAt().");
+        for (PersonWorksAt person : persons) {
+            log.info("id = {} \t name = {} \t conpany id = {} \t company = {}",
+                    person.getPerson().getId(),
+                    person.getPerson().getName(),
+                    person.getCompany().getId(),
+                    person.getCompany().getName());
+        }
+        log.debug("<-- printWorksAt().");
+    }
+
+    private static void printHasInterest(List<PersonHasInterest> persons) {
+        log.debug("--> printHasInterest().");
+        int counter = 1;
+        for (PersonHasInterest person : persons) {
+            log.info("id = {} \t name = {} \t tag id = {} \t tag = {}",
+                    person.getPerson().getId(),
+                    person.getPerson().getName(),
+                    person.getTag().getId(),
+                    person.getTag().getName());
+            counter++;
+            if (counter > 15) {
+                break;
+            }
+        }
+        log.debug("<-- printHasInterest().");
     }
 
 

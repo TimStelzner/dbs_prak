@@ -25,7 +25,4 @@ public class Place {
 
     @Column()
     private String type;
-
-    @Column()
-    private Long is_part_of;
 }

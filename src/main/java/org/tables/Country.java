@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.tables.parent.Place;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -14,12 +15,15 @@ import java.util.Set;
 public class Country extends Place {
 
     @ManyToOne(targetEntity = Continent.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "is_part_of", foreignKey = @ForeignKey(name = "country_is_part_of_fkey"))
-    private Long is_part_of;
+    @JoinColumn(foreignKey = @ForeignKey(name = "country_is_part_of_fkey"))
+    private Continent isPartOf;
 
-    @OneToMany(mappedBy = "country_id")
+    @OneToMany(mappedBy = "country")
     private Set<Company> companies;
 
-    @OneToMany(mappedBy = "is_part_of")
+    @OneToMany(mappedBy = "isPartOf")
     private Set<City> cities;
+
+    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Post> posts = new HashSet<>();
 }

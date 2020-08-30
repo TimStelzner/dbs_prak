@@ -20,11 +20,11 @@ public class Forum {
     @Column
     private String title;
 
-    @Column
-    private Date creation_date;
+    @Column(name = "creation_date")
+    private Date creationDate;
 
-    @Column(nullable = false)
-    private Long person_id;
+    @Column(name = "person_id", nullable = false)
+    private Long personId;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "forum_has_member",
@@ -35,7 +35,9 @@ public class Forum {
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "forum_has_tag",
             joinColumns = {@JoinColumn(name = "forum_id")},
-            inverseJoinColumns = {@JoinColumn(name = "tag_id")}
-    )
+            inverseJoinColumns = {@JoinColumn(name = "tag_id")})
     private Set<Tag> tags = new HashSet<>();
+
+    @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Post> posts = new HashSet<>();
 }

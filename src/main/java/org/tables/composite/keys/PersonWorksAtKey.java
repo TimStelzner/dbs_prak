@@ -1,4 +1,4 @@
-package org.tables.composite;
+package org.tables.composite.keys;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import java.util.Objects;
 @Embeddable
 @Getter
 @Setter
-public class WorksAtKey implements Serializable {
+public class PersonWorksAtKey implements Serializable {
 
     @Column
     private Long personId;
@@ -22,8 +22,8 @@ public class WorksAtKey implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof WorksAtKey)) return false;
-        WorksAtKey that = (WorksAtKey) o;
+        if (!(o instanceof PersonWorksAtKey)) return false;
+        PersonWorksAtKey that = (PersonWorksAtKey) o;
         return getPersonId().equals(that.getPersonId()) &&
                 getCompanyId().equals(that.getCompanyId());
     }

@@ -38,7 +38,8 @@ public class Main {
             TransactionUtils.getTag(1L);
             TransactionUtils.selectAll("City");
 */
-            TransactionUtils.getCity(356);
+            TransactionUtils.selectAll("PersonHasInterest");
+            //TransactionUtils.getPost(8488L);
 
 
         } catch (PersistenceException e) {
@@ -52,6 +53,7 @@ public class Main {
         log.debug("<-- Main().");
     }
 
+    /*
     public static void addPlace(Long id, String name, String url, String type, long is_part_of) {
         log.debug("--> addPlace().");
 
@@ -68,7 +70,7 @@ public class Main {
             place.setName(name);
             place.setUrl(url);
             place.setType(type);
-            place.setIs_part_of(is_part_of);
+            place.setIsPartOf(is_part_of);
 
             // Save the object
             entityManager.persist(place);
@@ -86,6 +88,8 @@ public class Main {
             entityManager.close();
         }
     }
+
+     */
 
 
 /*

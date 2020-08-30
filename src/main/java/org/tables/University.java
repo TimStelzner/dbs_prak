@@ -9,7 +9,6 @@ import javax.persistence.*;
 public class University extends Organisation {
 
     @ManyToOne(targetEntity = City.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id", foreignKey = @ForeignKey(name = "university_city_fkey"))
-    private Long city_id;
-
+    @JoinColumn(foreignKey = @ForeignKey(name = "university_city_fkey"), nullable = false)
+    private City city;
 }
