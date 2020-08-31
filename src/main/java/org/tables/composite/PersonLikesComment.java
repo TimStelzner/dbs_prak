@@ -16,12 +16,12 @@ public class PersonLikesComment {
     @EmbeddedId
     private PersonLikesCommentKey id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("personId")
     @JoinColumn(name = "person_id")
     private Person person;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("commentId")
     @JoinColumn(name = "comment_id")
     private Comment comment;

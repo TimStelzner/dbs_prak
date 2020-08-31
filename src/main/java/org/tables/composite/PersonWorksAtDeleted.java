@@ -4,16 +4,16 @@ import lombok.Getter;
 import lombok.Setter;
 import org.tables.Company;
 import org.tables.Person;
-import org.tables.composite.keys.PersonWorksAtKey;
+import org.tables.composite.keys.PersonWorksAtDeletedKey;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
-public class PersonWorksAt {
+public class PersonWorksAtDeleted {
     @EmbeddedId
-    private PersonWorksAtKey id;
+    private PersonWorksAtDeletedKey id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("personId")
@@ -25,6 +25,7 @@ public class PersonWorksAt {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @Column
-    private int workFrom;
+    // name required because the database has a misspelled variable name
+    @Column(name = "work_form")
+    private Integer workFrom;
 }

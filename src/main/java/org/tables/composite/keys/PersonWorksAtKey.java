@@ -12,7 +12,6 @@ import java.util.Objects;
 @Getter
 @Setter
 public class PersonWorksAtKey implements Serializable {
-
     @Column
     private Long personId;
 

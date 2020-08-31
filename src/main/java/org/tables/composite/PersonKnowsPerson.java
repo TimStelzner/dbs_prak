@@ -15,12 +15,12 @@ public class PersonKnowsPerson {
     @EmbeddedId
     private PersonKnowsPersonKey id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("personId1")
     @JoinColumn(name = "person_id1")
     private Person person1;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("personId2")
     @JoinColumn(name = "person_id2")
     private Person person2;

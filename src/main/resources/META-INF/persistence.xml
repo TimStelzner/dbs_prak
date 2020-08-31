@@ -28,6 +28,10 @@
         <class>org.tables.composite.PersonLikesComment</class>
         <class>org.tables.composite.PersonLikesPost</class>
         <class>org.tables.composite.PersonStudiesAt</class>
+        <class>org.tables.composite.PersonWorksAtDeleted</class>
+        <class>org.tables.TagClass</class>
+        <class>org.tables.composite.TagHasType</class>
+        <class>org.tables.composite.TagClassIsSubclassOf</class>
         <properties>
             <!-- Database Driver -->
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>

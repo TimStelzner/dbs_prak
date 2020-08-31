@@ -2,26 +2,26 @@ package org.tables.composite;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.tables.Person;
 import org.tables.Tag;
-import org.tables.composite.keys.PersonHasInterestKey;
+import org.tables.TagClass;
+import org.tables.composite.keys.TagHasTypeKey;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
-public class PersonHasInterest {
+public class TagHasType {
     @EmbeddedId
-    private PersonHasInterestKey id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("personId")
-    @JoinColumn(name = "person_id")
-    private Person person;
+    private TagHasTypeKey id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("tagId")
     @JoinColumn(name = "tag_id")
     private Tag tag;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("tagClassId")
+    @JoinColumn(name = "tagclass_id")
+    private TagClass tagClass;
 }

@@ -66,6 +66,19 @@ public class TransactionUtils {
                 break;
             case SqlUtils.P_STUDIES_AT:
                 printPersonStudiesAt((List<PersonStudiesAt>) resultList);
+                break;
+            case SqlUtils.P_NO_LONGER_WORKS_AT:
+                printPersonWorksAtDeleted((List<PersonWorksAtDeleted>) resultList);
+                break;
+            case SqlUtils.TAG_CLASS:
+                printTagClass((List<TagClass>) resultList);
+                break;
+            case SqlUtils.TAG_HAS_TYPE:
+                printTagHasType((List<TagHasType>) resultList);
+                break;
+            case SqlUtils.TAG_CLASS_IS_CHILD_OF:
+                printTagClassIsSubclassOf((List<TagClassIsSubclassOf>) resultList);
+                break;
         }
     }
 
@@ -554,6 +567,63 @@ public class TransactionUtils {
             }
         }
         log.debug("<-- printLikesPost().");
+    }
+
+    private static void printPersonWorksAtDeleted(List<PersonWorksAtDeleted> persons) {
+        log.debug("--> printLikesPost().");
+        for (PersonWorksAtDeleted person : persons) {
+            log.info("id = {} \t name = {} \t company = {} \t stopped working = {}",
+                    person.getPerson().getId(),
+                    person.getPerson().getName(),
+                    person.getCompany().getName(),
+                    person.getId().getDeleteDate());
+        }
+        log.debug("<-- printLikesPost().");
+    }
+
+    private static void printTagClass(List<TagClass> tagClasses) {
+        log.debug("--> printTagClass().");
+        for (TagClass tagClass : tagClasses) {
+            log.info("id = {} \t name = {} \t url = {}",
+                    tagClass.getId(),
+                    tagClass.getName(),
+                    tagClass.getUrl());
+        }
+        log.debug("<-- printTagClass().");
+    }
+
+    private static void printTagHasType(List<TagHasType> tags) {
+        log.debug("--> printTagHasType().");
+        int counter = 1;
+        for (TagHasType tag : tags) {
+            log.info("tag id = {} \t name = {} \t tag class id = {} \t name = {}",
+                    tag.getTag().getId(),
+                    tag.getTag().getName(),
+                    tag.getTagClass().getId(),
+                    tag.getTagClass().getName());
+            counter++;
+            if (counter > 15) {
+                break;
+            }
+        }
+        log.debug("<-- printTagHasType().");
+    }
+
+    private static void printTagClassIsSubclassOf(List<TagClassIsSubclassOf> tagClasses) {
+        log.debug("--> printTagClassIsSubclassOf().");
+        int counter = 1;
+        for (TagClassIsSubclassOf subclass : tagClasses) {
+            log.info("child id = {} \t name = {} \t parent id = {} \t name = {}",
+                    subclass.getChildTag().getId(),
+                    subclass.getChildTag().getName(),
+                    subclass.getParentTag().getId(),
+                    subclass.getParentTag().getName());
+            counter++;
+            if (counter > 15) {
+                break;
+            }
+        }
+        log.debug("<-- printTagClassIsSubclassOf().");
     }
 
 

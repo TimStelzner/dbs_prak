@@ -19,27 +19,7 @@ public class Main {
         log.debug("--> Main().");
 
         try {
-            /*
-            TransactionUtils.getUniversity(1614);
-            TransactionUtils.getPerson(94);
-            TransactionUtils.getPerson(65);
-
-            TransactionUtils.getForum(187);
-            TransactionUtils.getPersonIsMemberOfForums(65);
-
-            TransactionUtils.getComment(34359744978L);
-            TransactionUtils.getComment(34359744975L);
-
-
-            TransactionUtils.getPost(8488L);
-            TransactionUtils.getPost(8717L);
-            TransactionUtils.getCompany(3L);
-
-
-            TransactionUtils.getTag(1L);
-            TransactionUtils.selectAll("City");
-*/
-            TransactionUtils.selectAll(SqlUtils.P_STUDIES_AT);
+            TransactionUtils.selectAll(SqlUtils.TAG_HAS_TYPE);
             //TransactionUtils.getPost(8488L);
 
 

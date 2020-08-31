@@ -6,29 +6,34 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Embeddable
 @Getter
 @Setter
-public class PersonStudiesAtKey implements Serializable {
+public class PersonWorksAtDeletedKey implements Serializable {
     @Column(nullable = false)
     private Long personId;
 
     @Column(nullable = false)
-    private Long universityId;
+    private Long companyId;
+
+    @Column(nullable = false)
+    private Timestamp deleteDate;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PersonStudiesAtKey)) return false;
-        PersonStudiesAtKey that = (PersonStudiesAtKey) o;
+        if (!(o instanceof PersonWorksAtDeletedKey)) return false;
+        PersonWorksAtDeletedKey that = (PersonWorksAtDeletedKey) o;
         return getPersonId().equals(that.getPersonId()) &&
-                getUniversityId().equals(that.getUniversityId());
+                getCompanyId().equals(that.getCompanyId()) &&
+                getDeleteDate().equals(that.getDeleteDate());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPersonId(), getUniversityId());
+        return Objects.hash(getPersonId(), getCompanyId(), getDeleteDate());
     }
 }

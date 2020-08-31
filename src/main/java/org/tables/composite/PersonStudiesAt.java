@@ -15,12 +15,12 @@ public class PersonStudiesAt {
     @EmbeddedId
     private PersonStudiesAtKey id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("personId")
     @JoinColumn(name = "person_id")
     private Person person;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("universityId")
     @JoinColumn(name = "university_id")
     private University university;

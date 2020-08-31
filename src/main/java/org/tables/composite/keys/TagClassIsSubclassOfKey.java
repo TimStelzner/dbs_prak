@@ -9,26 +9,27 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-@Setter
 @Getter
-public class PersonLikesCommentKey implements Serializable {
-    @Column(nullable = false)
-    private Long personId;
+@Setter
+public class TagClassIsSubclassOfKey implements Serializable {
 
     @Column(nullable = false)
-    private Long commentId;
+    private Long childId;
+
+    @Column(nullable = false)
+    private Long parentId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PersonLikesCommentKey)) return false;
-        PersonLikesCommentKey that = (PersonLikesCommentKey) o;
-        return getPersonId().equals(that.getPersonId()) &&
-                getCommentId().equals(that.getCommentId());
+        if (!(o instanceof TagClassIsSubclassOfKey)) return false;
+        TagClassIsSubclassOfKey that = (TagClassIsSubclassOfKey) o;
+        return getChildId().equals(that.getChildId()) &&
+                getParentId().equals(that.getParentId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPersonId(), getCommentId());
+        return Objects.hash(getChildId(), getParentId());
     }
 }
