@@ -3,19 +3,71 @@ package org.utilities;
 import lombok.extern.slf4j.Slf4j;
 import org.Main;
 import org.tables.*;
-import org.tables.composite.PersonHasInterest;
-import org.tables.composite.PersonWorksAt;
+import org.tables.composite.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 public class TransactionUtils {
+
+    public static void selectAll(String table) throws PersistenceException {
+        log.debug("--> select({}).", table);
+
+        // Setup variables
+        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
+        // Class cls = Class.forName(table);
+        // log.debug("cls = {}", cls);
+
+        StringBuilder query = new StringBuilder("from ");
+        query.append(table);
+
+        Query typedQuery = entityManager.createQuery(query.toString());
+        List<?> resultList = typedQuery.getResultList();
+        // String capitalize = WordUtils.capitalize(table);
+        // log.debug("capitalize = {}", capitalize);
+
+        switch (table) {
+            case "City":
+                printCities((List<City>) resultList);
+                break;
+            case "Country":
+                printCountries((List<Country>) resultList);
+                break;
+            case "Comment":
+                printComments((List<Comment>) resultList);
+                break;
+            case "University":
+                printUniversities((List<University>) resultList);
+                break;
+            case "Person":
+                printPersons((List<Person>) resultList);
+                break;
+            case "Forum":
+                printForums((List<Forum>) resultList);
+                break;
+            case "Post":
+                printPost((List<Post>) resultList);
+                break;
+            case "PersonWorksAt":
+                printWorksAt((List<PersonWorksAt>) resultList);
+            case "PersonHasInterest":
+                printHasInterest((List<PersonHasInterest>) resultList);
+            case "PersonKnowsPerson":
+                printPersonKnows((List<PersonKnowsPerson>) resultList);
+            case SqlUtils.P_LIKES_COMMENT:
+                printPersonLikesComment((List<PersonLikesComment>) resultList);
+                break;
+            case SqlUtils.P_LIKES_POST:
+                printPersonLikesPost((List<PersonLikesPost>) resultList);
+                break;
+            case SqlUtils.P_STUDIES_AT:
+                printPersonStudiesAt((List<PersonStudiesAt>) resultList);
+        }
+    }
 
     public static void getUniversity(long id) throws PersistenceException {
         log.debug("--> getUniversity().");
@@ -171,6 +223,7 @@ public class TransactionUtils {
         log.debug("<-- getForum().");
     }
 
+    /*
     public static void getPersonIsMemberOfForums(long id) throws PersistenceException {
         log.debug("--> getPersonIsMemberOfForums().");
 
@@ -197,6 +250,8 @@ public class TransactionUtils {
         entityManager.close();
         log.debug("<-- getPersonIsMemberOfForums().");
     }
+
+     */
 
     public static void getComment(Long id) throws PersistenceException {
         log.debug("--> getComment().");
@@ -303,51 +358,6 @@ public class TransactionUtils {
         log.debug("<-- getTag().");
     }
 
-    public static void selectAll(String table) throws PersistenceException {
-        log.debug("--> select({}).", table);
-
-        // Setup variables
-        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
-        // Class cls = Class.forName(table);
-        // log.debug("cls = {}", cls);
-
-        StringBuilder query = new StringBuilder("from ");
-        query.append(table);
-
-        Query typedQuery = entityManager.createQuery(query.toString());
-        List<?> resultList = typedQuery.getResultList();
-        // String capitalize = WordUtils.capitalize(table);
-        // log.debug("capitalize = {}", capitalize);
-
-        switch (table) {
-            case "City":
-                printCities((List<City>) resultList);
-                break;
-            case "Country":
-                printCountries((List<Country>) resultList);
-                break;
-            case "Comment":
-                printComments((List<Comment>) resultList);
-                break;
-            case "University":
-                printUniversities((List<University>) resultList);
-                break;
-            case "Person":
-                printPersons((List<Person>) resultList);
-                break;
-            case "Forum":
-                printForums((List<Forum>) resultList);
-                break;
-            case "Post":
-                printPost((List<Post>) resultList);
-                break;
-            case "PersonWorksAt":
-                printWorksAt((List<PersonWorksAt>) resultList);
-            case "PersonHasInterest":
-                printHasInterest((List<PersonHasInterest>) resultList);
-        }
-    }
-
     private static void printCities(List<City> cities) {
         log.debug("--> printCities().");
         for (City city : cities) {
@@ -360,6 +370,7 @@ public class TransactionUtils {
         log.debug("<-- printCities().");
     }
 
+
     private static void printCountries(List<Country> countries) {
         log.debug("--> printCountries().");
         for (Country country : countries) {
@@ -371,6 +382,7 @@ public class TransactionUtils {
         }
         log.debug("<-- printCountries().");
     }
+
 
     private static void printComments(List<Comment> comments) {
         log.debug("--> printCountries().");
@@ -473,6 +485,75 @@ public class TransactionUtils {
             }
         }
         log.debug("<-- printHasInterest().");
+    }
+
+    private static void printPersonKnows(List<PersonKnowsPerson> persons) {
+        log.debug("--> printPersonKnows().");
+        int counter = 1;
+        for (PersonKnowsPerson person : persons) {
+            log.info("id = {} \t name = {} \t knows id = {} \t name = {}",
+                    person.getPerson1().getId(),
+                    person.getPerson1().getName(),
+                    person.getPerson2().getId(),
+                    person.getPerson2().getName());
+            counter++;
+            if (counter > 15) {
+                break;
+            }
+        }
+        log.debug("<-- printPersonKnows().");
+    }
+
+    private static void printPersonLikesComment(List<PersonLikesComment> persons) {
+        log.debug("--> printLikesComment().");
+        int counter = 1;
+        for (PersonLikesComment person : persons) {
+            log.info("id = {} \t name = {} \t knows comment = {} \t content = {}",
+                    person.getPerson().getId(),
+                    person.getPerson().getName(),
+                    person.getComment().getId(),
+                    person.getComment().getContent());
+            counter++;
+            if (counter > 15) {
+                break;
+            }
+        }
+        log.debug("<-- printLikesComment().");
+    }
+
+    private static void printPersonLikesPost(List<PersonLikesPost> persons) {
+        log.debug("--> printLikesPost().");
+        int counter = 1;
+        for (PersonLikesPost person : persons) {
+            log.info("id = {} \t name = {} \t knows post = {} \t content = {}",
+                    person.getPerson().getId(),
+                    person.getPerson().getName(),
+                    person.getPost().getId(),
+                    person.getPost().getContent());
+            counter++;
+            if (counter > 15) {
+                break;
+            }
+        }
+        log.debug("<-- printLikesPost().");
+    }
+
+    private static void printPersonStudiesAt(List<PersonStudiesAt> persons) {
+        log.debug("--> printLikesPost().");
+        int counter = 1;
+        for (PersonStudiesAt person : persons) {
+            log.info("id = {} \t name = {} \t uni id = {} \t name = {} \t class year = {}",
+                    person.getPerson().getId(),
+                    person.getPerson().getName(),
+                    person.getUniversity().getId(),
+                    person.getUniversity().getName(),
+                    person.getClassYear());
+            counter++;
+            if (counter > 15) {
+                break;
+            }
+        }
+        log.debug("<-- printLikesPost().");
     }
 
 

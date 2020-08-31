@@ -33,7 +33,7 @@ public class Comment extends Message {
 
     @ManyToOne(targetEntity = Person.class, fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "comment_person_id_fkey"))
-    private Country person;
+    private Person person;
 
     @ManyToOne(targetEntity = Country.class, fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "comment_country_id_fkey"))

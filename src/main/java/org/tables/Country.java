@@ -13,7 +13,6 @@ import java.util.Set;
 @Getter
 @Setter
 public class Country extends Place {
-
     @ManyToOne(targetEntity = Continent.class, fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "country_is_part_of_fkey"))
     private Continent isPartOf;

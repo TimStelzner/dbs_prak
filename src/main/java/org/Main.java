@@ -2,6 +2,7 @@ package org;
 
 import lombok.extern.slf4j.Slf4j;
 import org.tables.parent.Place;
+import org.utilities.SqlUtils;
 import org.utilities.TransactionUtils;
 
 import javax.persistence.*;
@@ -38,7 +39,7 @@ public class Main {
             TransactionUtils.getTag(1L);
             TransactionUtils.selectAll("City");
 */
-            TransactionUtils.selectAll("PersonHasInterest");
+            TransactionUtils.selectAll(SqlUtils.P_STUDIES_AT);
             //TransactionUtils.getPost(8488L);
 
 

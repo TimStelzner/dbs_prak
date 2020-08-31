@@ -27,4 +27,5 @@ public class Tag {
 
     @ManyToMany(mappedBy = "tags")
     private Set<Forum> forums = new HashSet<>();
+
 }

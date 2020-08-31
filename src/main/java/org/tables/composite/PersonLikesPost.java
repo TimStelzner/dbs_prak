@@ -2,18 +2,19 @@ package org.tables.composite;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.tables.Company;
 import org.tables.Person;
-import org.tables.composite.keys.PersonWorksAtKey;
+import org.tables.Post;
+import org.tables.composite.keys.PersonLikesPostKey;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 @Entity
 @Getter
 @Setter
-public class PersonWorksAt {
+public class PersonLikesPost {
     @EmbeddedId
-    private PersonWorksAtKey id;
+    private PersonLikesPostKey id;
 
     @ManyToOne
     @MapsId("personId")
@@ -21,10 +22,10 @@ public class PersonWorksAt {
     private Person person;
 
     @ManyToOne
-    @MapsId("companyId")
-    @JoinColumn(name = "company_id")
-    private Company company;
+    @MapsId("postId")
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @Column
-    private int workFrom;
+    private Date creationDate;
 }
