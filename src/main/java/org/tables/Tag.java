@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -22,10 +20,14 @@ public class Tag {
     @Column
     private String url;
 
+    /*
     @ManyToMany(mappedBy = "tags")
     private Set<Comment> comments = new HashSet<>();
 
+
     @ManyToMany(mappedBy = "tags")
     private Set<Forum> forums = new HashSet<>();
+
+     */
 
 }

@@ -25,11 +25,14 @@ public class Comment extends Message {
     @OneToMany(mappedBy = "replyOfComment")
     private Set<Comment> comments = new HashSet<>();
 
+    /*
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "comment_has_tag",
             joinColumns = {@JoinColumn(name = "comment_id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id")})
     private Set<Tag> tags;
+
+     */
 
     @ManyToOne(targetEntity = Person.class, fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "comment_person_id_fkey"))

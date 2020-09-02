@@ -13,6 +13,11 @@ import javax.persistence.MappedSuperclass;
         @TypeDef(name = "string-array", typeClass = StringArrayType.class),
 })
 
+/**
+ * Required to simulate arrays as primitive types for database.
+ * Classes with arrays need to extend this class.
+ * Use @Type(type = "string-array") to implement the array type.
+ */
 @MappedSuperclass @Getter @Setter
 public class BaseEntity {
     @Id

@@ -19,7 +19,7 @@ public class Main {
         log.debug("--> Main().");
 
         try {
-            TransactionUtils.selectAll(SqlUtils.TAG_HAS_TYPE);
+            TransactionUtils.selectAll(SqlUtils.PERSON);
             //TransactionUtils.getPost(8488L);
 
 

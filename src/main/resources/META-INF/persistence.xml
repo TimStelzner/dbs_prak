@@ -32,6 +32,9 @@
         <class>org.tables.TagClass</class>
         <class>org.tables.composite.TagHasType</class>
         <class>org.tables.composite.TagClassIsSubclassOf</class>
+        <class>org.tables.composite.ForumHasMember</class>
+        <class>org.tables.composite.ForumHasTag</class>
+        <class>org.tables.composite.PostHasTag</class>
         <properties>
             <!-- Database Driver -->
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>

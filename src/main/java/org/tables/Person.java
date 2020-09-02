@@ -20,6 +20,10 @@ public class Person extends BaseEntity {
     @Column(name = "creation_date")
     private Timestamp creationDate;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "person_city_ip_fkey"))
+    private City city;
+
     @Column()
     private String surname;
 
@@ -38,9 +42,6 @@ public class Person extends BaseEntity {
     @Column(name = "location_ip")
     private String locationIp;
 
-    @Column(name = "city_id")
-    private Integer cityId;
-
     @Type(type = "string-array")
     @Column(columnDefinition = "text[]")
     private String[] emails;
@@ -49,9 +50,15 @@ public class Person extends BaseEntity {
     @Column(columnDefinition = "text[]", nullable = false)
     private String[] speaks;
 
+    /*
     @ManyToMany(mappedBy = "persons")
     private Set<Forum> forums = new HashSet<>();
 
+     */
+
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Post> post = new HashSet<>();
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Forum> forums = new HashSet<>();
 }

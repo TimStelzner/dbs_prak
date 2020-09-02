@@ -43,10 +43,10 @@ public class TransactionUtils {
             case "University":
                 printUniversities((List<University>) resultList);
                 break;
-            case "Person":
+            case SqlUtils.PERSON:
                 printPersons((List<Person>) resultList);
                 break;
-            case "Forum":
+            case SqlUtils.FORUM:
                 printForums((List<Forum>) resultList);
                 break;
             case "Post":
@@ -78,6 +78,15 @@ public class TransactionUtils {
                 break;
             case SqlUtils.TAG_CLASS_IS_CHILD_OF:
                 printTagClassIsSubclassOf((List<TagClassIsSubclassOf>) resultList);
+                break;
+            case SqlUtils.FORUM_HAS_MEMBER:
+                printForumHasMember((List<ForumHasMember>) resultList);
+                break;
+            case SqlUtils.FORUM_HAS_TAG:
+                printForumHasTag((List<ForumHasTag>) resultList);
+                break;
+            case SqlUtils.POST_HAS_TAG:
+                printPostHasTag((List<PostHasTag>) resultList);
                 break;
         }
     }
@@ -230,7 +239,7 @@ public class TransactionUtils {
                 forum.getId(),
                 forum.getTitle(),
                 forum.getCreationDate(),
-                forum.getPersonId());
+                forum.getPerson().getId());
 
         entityManager.close();
         log.debug("<-- getForum().");
@@ -434,7 +443,7 @@ public class TransactionUtils {
                     person.getGender(),
                     person.getBirthday(),
                     person.getCreationDate(),
-                    person.getCityId());
+                    person.getCity().getName());
         }
         log.debug("<-- printPersons().");
     }
@@ -447,7 +456,7 @@ public class TransactionUtils {
                     forum.getId(),
                     forum.getTitle(),
                     forum.getCreationDate(),
-                    forum.getPersonId());
+                    forum.getPerson().getId());
         }
         log.debug("<-- printForums().");
     }
@@ -626,5 +635,56 @@ public class TransactionUtils {
         log.debug("<-- printTagClassIsSubclassOf().");
     }
 
+    private static void printForumHasMember(List<ForumHasMember> persons) {
+        log.debug("--> printForumHasMember().");
+        int counter = 1;
+        for (ForumHasMember member : persons) {
+            log.info("person id = {} \t name = {} \t forum id = {} \t title = {} \t joined = {}",
+                    member.getPerson().getId(),
+                    member.getPerson().getName(),
+                    member.getForum().getId(),
+                    member.getForum().getTitle(),
+                    member.getJoinDate());
+            counter++;
+            if (counter > 15) {
+                break;
+            }
+        }
+        log.debug("<-- printForumHasMember().");
+    }
+
+    private static void printForumHasTag(List<ForumHasTag> forums) {
+        log.debug("--> printTagClassIsSubclassOf().");
+        int counter = 1;
+        for (ForumHasTag forum : forums) {
+            log.info("forum id = {} \t name = {} \t tag id = {} \t name = {}",
+                    forum.getForum().getId(),
+                    forum.getForum().getId(),
+                    forum.getTag().getId(),
+                    forum.getTag().getName());
+            counter++;
+            if (counter > 15) {
+                break;
+            }
+        }
+        log.debug("<-- printTagClassIsSubclassOf().");
+    }
+
+    private static void printPostHasTag(List<PostHasTag> posts) {
+        log.debug("--> printPostHasTag().");
+        int counter = 1;
+        for (PostHasTag forum : posts) {
+            log.info("post id = {} \t content = {} \t tag id = {} \t name = {}",
+                    forum.getPost().getId(),
+                    forum.getPost().getContent(),
+                    forum.getTag().getId(),
+                    forum.getTag().getName());
+            counter++;
+            if (counter > 15) {
+                break;
+            }
+        }
+        log.debug("<-- printPostHasTag().");
+    }
 
 }

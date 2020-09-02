@@ -19,4 +19,7 @@ public class City extends Place {
 
     @OneToMany(mappedBy = "city")
     private Set<University> universities = new HashSet<>();
+
+    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Person> persons = new HashSet<>();
 }
