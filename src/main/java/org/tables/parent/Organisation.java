@@ -1,4 +1,4 @@
-package org.tables;
+package org.tables.parent;
 
 import lombok.Getter;
 import lombok.Setter;

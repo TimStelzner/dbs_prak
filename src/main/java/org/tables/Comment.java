@@ -8,7 +8,6 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Entity
 @Getter
 @Setter
@@ -22,6 +21,14 @@ public class Comment extends Message {
     @JoinColumn(name = "reply_of_comment", foreignKey = @ForeignKey(name = "comment_reply_of_comment_fkey"))
     private Comment replyOfComment;
 
+    @ManyToOne(targetEntity = Person.class, fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "comment_person_id_fkey"))
+    private Person person;
+
+    @ManyToOne(targetEntity = Country.class, fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "comment_country_id_fkey"))
+    private Country country;
+
     @OneToMany(mappedBy = "replyOfComment")
     private Set<Comment> comments = new HashSet<>();
 
@@ -33,14 +40,4 @@ public class Comment extends Message {
     private Set<Tag> tags;
 
      */
-
-    @ManyToOne(targetEntity = Person.class, fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = @ForeignKey(name = "comment_person_id_fkey"))
-    private Person person;
-
-    @ManyToOne(targetEntity = Country.class, fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = @ForeignKey(name = "comment_country_id_fkey"))
-    private Country country;
-
-
 }

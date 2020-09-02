@@ -13,7 +13,7 @@ import java.util.Objects;
 @Setter
 public class CommentHasTagKey implements Serializable {
     @Column(nullable = false)
-    private Long postId;
+    private Long commentId;
 
     @Column(nullable = false)
     private Long tagId;
@@ -21,14 +21,14 @@ public class CommentHasTagKey implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PostHasTagKey)) return false;
-        PostHasTagKey that = (PostHasTagKey) o;
-        return getPostId().equals(that.getPostId()) &&
+        if (!(o instanceof CommentHasTagKey)) return false;
+        CommentHasTagKey that = (CommentHasTagKey) o;
+        return getCommentId().equals(that.getCommentId()) &&
                 getTagId().equals(that.getTagId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPostId(), getTagId());
+        return Objects.hash(getCommentId(), getTagId());
     }
 }

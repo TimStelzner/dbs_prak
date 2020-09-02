@@ -19,7 +19,7 @@ public class Main {
         log.debug("--> Main().");
 
         try {
-            TransactionUtils.selectAll(SqlUtils.PERSON);
+            TransactionUtils.selectAll(SqlUtils.POST);
             //TransactionUtils.getPost(8488L);
 
 

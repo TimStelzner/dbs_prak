@@ -2,6 +2,7 @@ package org.tables;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.tables.parent.Organisation;
 
 import javax.persistence.*;
 

@@ -13,7 +13,7 @@
         <class>org.tables.City</class>
         <class>org.tables.Country</class>
         <class>org.tables.Continent</class>
-        <class>org.tables.Organisation</class>
+        <class>org.tables.parent.Organisation</class>
         <class>org.tables.University</class>
         <class>org.tables.Person</class>
         <class>org.tables.Forum</class>
@@ -35,6 +35,7 @@
         <class>org.tables.composite.ForumHasMember</class>
         <class>org.tables.composite.ForumHasTag</class>
         <class>org.tables.composite.PostHasTag</class>
+        <class>org.tables.composite.CommentHasTag</class>
         <properties>
             <!-- Database Driver -->
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>

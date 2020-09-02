@@ -40,8 +40,11 @@ public class TransactionUtils {
             case "Comment":
                 printComments((List<Comment>) resultList);
                 break;
-            case "University":
+            case SqlUtils.UNI:
                 printUniversities((List<University>) resultList);
+                break;
+            case SqlUtils.COMPANY:
+                printCompanies((List<Company>) resultList);
                 break;
             case SqlUtils.PERSON:
                 printPersons((List<Person>) resultList);
@@ -87,6 +90,9 @@ public class TransactionUtils {
                 break;
             case SqlUtils.POST_HAS_TAG:
                 printPostHasTag((List<PostHasTag>) resultList);
+                break;
+            case SqlUtils.COMMENT_HAS_TAG:
+                printCommentHasTag((List<CommentHasTag>) resultList);
                 break;
         }
     }
@@ -434,6 +440,17 @@ public class TransactionUtils {
         log.debug("<-- printUniversities().");
     }
 
+    private static void printCompanies(List<Company> companies) {
+        log.debug("--> printCompanies().");
+        for (Company company : companies) {
+            log.info("id = {} \t name = {} \t country id = {}",
+                    company.getId(),
+                    company.getName(),
+                    company.getCountry().getId());
+        }
+        log.debug("<-- printCompanies().");
+    }
+
     private static void printPersons(List<Person> persons) {
         log.debug("--> printPersons().");
 
@@ -685,6 +702,23 @@ public class TransactionUtils {
             }
         }
         log.debug("<-- printPostHasTag().");
+    }
+
+    private static void printCommentHasTag(List<CommentHasTag> comments) {
+        log.debug("--> printCommentHasTag().");
+        int counter = 1;
+        for (CommentHasTag comment : comments) {
+            log.info("comment id = {} \t content = {} \t tag id = {} \t name = {}",
+                    comment.getComment().getId(),
+                    comment.getComment().getContent(),
+                    comment.getTag().getId(),
+                    comment.getTag().getName());
+            counter++;
+            if (counter > 15) {
+                break;
+            }
+        }
+        log.debug("<-- printCommentHasTag().");
     }
 
 }
