@@ -30,9 +30,63 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
 
         // Run query
         person = typedQuery.getSingleResult();
-        profile.append("id = " + person.getId() + "\n");
-        profile.append("created on = " + person.getCreationDate() + "\n");
-        profile.append("surname = " + person.getSurname() + "\n");
+        String name = person.getName();
+
+        profile.append("id = ")
+                .append(person.getId())
+                .append(LINE_BREAK)
+                .append("created on = ")
+                .append(person.getCreationDate())
+                .append(LINE_BREAK)
+                .append("surname = ")
+                .append(person.getSurname())
+                .append(LINE_BREAK)
+                .append("name = ")
+                .append(person.getName())
+                .append(LINE_BREAK)
+                .append("gender =")
+                .append(person.getGender())
+                .append(LINE_BREAK)
+                .append("birthday =")
+                .append(person.getBirthday())
+                .append(LINE_BREAK)
+                .append("browser used =")
+                .append(person.getBrowser_used())
+                .append(LINE_BREAK)
+                .append("location ip =")
+                .append(person.getLocationIp())
+                .append(LINE_BREAK)
+                .append("city =")
+                .append(person.getCity().getName())
+                .append(LINE_BREAK)
+                .append("joined = ")
+                .append(person.getCreationDate())
+                .append(LINE_BREAK);
+
+        // List all the spoken languages
+        profile.append("speaks [");
+        String[] languages = person.getSpeaks();
+        for (String language : languages) {
+            profile.append(language)
+                    .append(",");
+        }
+        // Replace last comma with square bracket
+        int lastCommaPosition = profile.lastIndexOf(",");
+        profile.replace(lastCommaPosition, lastCommaPosition + 1, "]");
+        profile.append(LINE_BREAK);
+
+        // List all the user's emails
+        profile.append("Emails: [");
+        String[] emails = person.getEmails();
+        for (String email : emails) {
+            profile.append(email)
+                    .append(",");
+        }
+        // Replace last comma with square bracket
+        lastCommaPosition = profile.lastIndexOf(",");
+        profile.replace(lastCommaPosition, lastCommaPosition + 1, "]");
+        profile.append(LINE_BREAK);
+
 
         entityManager.close();
         log.debug("<-- getProfile().");
