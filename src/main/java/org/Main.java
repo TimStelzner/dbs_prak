@@ -1,9 +1,8 @@
 package org;
 
 import lombok.extern.slf4j.Slf4j;
+import org.application.UserInterface;
 import org.tables.parent.Place;
-import org.utilities.SqlUtils;
-import org.utilities.TransactionUtils;
 
 import javax.persistence.*;
 
@@ -19,10 +18,14 @@ public class Main {
         log.debug("--> Main().");
 
         try {
-            TransactionUtils.selectAll(SqlUtils.POST);
-            //TransactionUtils.getPost(8488L);
 
+            //TransactionUtils.selectAll(SqlUtils.POST);
+            //TransactionUtils.getPost(001232L);
+            //TransactionUtils.getPost(8400046488L);
+            UserInterface ui = new UserInterface();
 
+        } catch (NoResultException e) {
+            log.error("No match found for your query.", e);
         } catch (PersistenceException e) {
             log.error("Database persistence error.", e);
         } catch (Exception e) {

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE config>
+
+<config>
+    <RootMenu>
+        <Title>Main Menu</Title>
+        <Entries>
+            <Entry>1 : getProfile</Entry>
+            <Entry>2 : getCommonInterestsOfMyFriends</Entry>
+            <Entry>3 : getCommonFriends</Entry>
+            <Entry>4 : getPersonsWithMostCommonInterests</Entry>
+            <Entry>5 : getJobRecommendation</Entry>
+            <Entry>6 : getShortestFriendshipPath</Entry>
+            <Entry>0 : Quit Program</Entry>
+        </Entries>
+    </RootMenu>
+</config>

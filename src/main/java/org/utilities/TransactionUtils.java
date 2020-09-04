@@ -206,7 +206,7 @@ public class TransactionUtils {
 
         // Setup variables
         EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
-        Post post = null;
+        Post post;
 
         // Setup query
         String query = "SELECT c FROM Post c WHERE c.id = :id";
