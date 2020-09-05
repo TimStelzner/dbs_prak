@@ -36,6 +36,7 @@
         <class>org.tables.composite.ForumHasTag</class>
         <class>org.tables.composite.PostHasTag</class>
         <class>org.tables.composite.CommentHasTag</class>
+        <class>org.tables.composite.PkpSymmetric</class>
         <properties>
             <!-- Database Driver -->
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>

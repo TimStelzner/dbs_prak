@@ -8,7 +8,7 @@ public interface PersonRelatedAPI {
 
     String getProfile(long id);
 
-    List<String> getCommonInterestsOfMyFriends(String id);
+    String getCommonInterestsOfMyFriends(long id);
 
     List<String> getCommonFriends(String id);
 

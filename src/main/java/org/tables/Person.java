@@ -4,6 +4,8 @@ package org.tables;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+import org.tables.composite.PersonHasInterest;
+import org.tables.composite.PkpSymmetric;
 import org.tables.parent.BaseEntity;
 
 import javax.persistence.*;
@@ -61,4 +63,14 @@ public class Person extends BaseEntity {
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Forum> forums = new HashSet<>();
+
+    @OneToMany(mappedBy = "person1", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PkpSymmetric> knows = new HashSet<>();
+
+    @OneToMany(mappedBy = "person1", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PkpSymmetric> known = new HashSet<>();
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PersonHasInterest> likes = new HashSet<>();
+
 }

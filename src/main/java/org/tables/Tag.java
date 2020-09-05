@@ -2,8 +2,11 @@ package org.tables;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.tables.composite.PersonHasInterest;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -19,6 +22,9 @@ public class Tag {
 
     @Column
     private String url;
+
+    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PersonHasInterest> likes = new HashSet<>();
 
     /*
     @ManyToMany(mappedBy = "tags")

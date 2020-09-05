@@ -32,9 +32,9 @@ final class InterfaceConfig {
             Xml config = new Xml(new FileInputStream(configFile), "config");
             Xml rootMenu = config.child("RootMenu");
             String title = rootMenu.child("Title").content();
+            properties.add(title);
             Xml entries = rootMenu.child("Entries");
             for (Xml entry : entries.children("Entry")) {
-                //System.out.println(entry.content());
                 properties.add(entry.content());
             }
 

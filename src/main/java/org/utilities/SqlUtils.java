@@ -7,6 +7,7 @@ public class SqlUtils {
     public static final String UNI = "University";
     public static final String COMPANY = "Company";
     public static final String PERSON_KNOWS = "PersonKnowsPerson";
+    public static final String PERSON_KNOWS_SYMMETRIC = "PkpSymmetric";
     public static final String P_LIKES_COMMENT = "PersonLikesComment";
     public static final String P_LIKES_POST = "PersonLikesPost";
     public static final String P_STUDIES_AT = "PersonStudiesAt";

@@ -12,10 +12,10 @@ import java.util.Objects;
 @Getter
 @Setter
 public class PersonKnowsPersonKey implements Serializable {
-    @Column
+    @Column(nullable = false)
     private Long personId1;
 
-    @Column
+    @Column(nullable = false)
     private Long personId2;
 
     @Override

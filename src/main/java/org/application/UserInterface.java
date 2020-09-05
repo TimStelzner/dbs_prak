@@ -45,6 +45,7 @@ public class UserInterface {
 
     private void close() {
         try {
+            System.out.println("Good Bye!");
             scanner.close();
         } catch (IOException e) {
             log.error("IOException occurred.", e);
@@ -58,22 +59,23 @@ public class UserInterface {
         while (userIsRequestingInputs) {
             displayUserInterface();
             System.out.println("Pick an option.");
-            int selectedOption = getUserInput();
+            long selectedOption = getUserInput();
 
             if (selectedOption == 0) {
                 userIsRequestingInputs = false;
             } else {
-                processUserInput(selectedOption);
+                processUserInput((int) selectedOption);
             }
         }
+        close();
     }
 
-    private int getUserInput() {
+    private long getUserInput() {
         log.debug("--> processUserInput().");
-        int userInput = -1;
+        long userInput = -1;
         try {
             String input = scanner.readLine();
-            userInput = Integer.parseInt(input);
+            userInput = Long.parseLong(input);
             log.debug("You typed {}", input);
         } catch (NumberFormatException e) {
             log.info("You did not enter a number.");

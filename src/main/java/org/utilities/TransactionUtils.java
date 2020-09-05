@@ -57,10 +57,16 @@ public class TransactionUtils {
                 break;
             case "PersonWorksAt":
                 printWorksAt((List<PersonWorksAt>) resultList);
+                break;
             case "PersonHasInterest":
                 printHasInterest((List<PersonHasInterest>) resultList);
+                break;
             case "PersonKnowsPerson":
                 printPersonKnows((List<PersonKnowsPerson>) resultList);
+                break;
+            case SqlUtils.PERSON_KNOWS_SYMMETRIC:
+                printPersonKnowsSymmetric((List<PkpSymmetric>) resultList);
+                break;
             case SqlUtils.P_LIKES_COMMENT:
                 printPersonLikesComment((List<PersonLikesComment>) resultList);
                 break;
@@ -541,6 +547,23 @@ public class TransactionUtils {
             }
         }
         log.debug("<-- printPersonKnows().");
+    }
+
+    private static void printPersonKnowsSymmetric(List<PkpSymmetric> persons) {
+        log.debug("--> printPersonKnowsSymmetric().");
+        int counter = 1;
+        for (PkpSymmetric person : persons) {
+            log.info("id = {} \t name = {} \t knows id = {} \t name = {}",
+                    person.getPerson1().getId(),
+                    person.getPerson1().getName(),
+                    person.getPerson2().getId(),
+                    person.getPerson2().getName());
+            counter++;
+            if (counter > 30) {
+                break;
+            }
+        }
+        log.debug("<-- printPersonKnowsSymmetric().");
     }
 
     private static void printPersonLikesComment(List<PersonLikesComment> persons) {
