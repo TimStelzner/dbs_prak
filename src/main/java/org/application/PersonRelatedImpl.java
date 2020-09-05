@@ -109,66 +109,68 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
 
 
         // TODO Not working
-        // Setup query
-
+        // Setup query. Assume the referenced person from id is called Bob.
         String query = "SELECT c FROM PkpSymmetric c WHERE c.id.personId1 = :bob";
         //TypedQuery<PkpSymmetric> typedQuery = entityManager.createQuery(query, PkpSymmetric.class);
         Query typedQuery = entityManager.createQuery(query);
         typedQuery.setParameter("bob", id);
 
-        // Run query
+        // Run query. These are all friends of Bob.
         List<PkpSymmetric> bobsFriends = typedQuery.getResultList();
 
-        // Find out all the stuff that given id likes
+        // Exit if Bob has no friends
+        if (bobsFriends.isEmpty()) {
+            return "Person does not exist or has no friends.";
+        }
+
+        String bob = bobsFriends.get(0).getPerson1().getName();
+
+        // Determine all the Tags that Bob likes
         Set<PersonHasInterest> stuffBobLikes = bobsFriends.get(0).getPerson1().getLikes();
         Set<Long> bobsFavoriteTags = new HashSet<>();
-
         for (PersonHasInterest s : stuffBobLikes) {
             Long tagId = s.getTag().getId();
             bobsFavoriteTags.add(tagId);
             log.debug("Adding {} to Bobs favorite tags.", tagId);
         }
 
-        System.out.println("friends of Chen");
+        interests.append(LINE_BREAK)
+                .append(bob)
+                .append("'s Common Interests With Friends")
+                .append(LINE_BREAK);
+        //System.out.println("friends of " + bob);
         for (PkpSymmetric friendOfBob : bobsFriends) {
-            System.out.println(friendOfBob.getId().getPersonId1() + " | " + friendOfBob.getId().getPersonId2());
+            //System.out.println(friendOfBob.getId().getPersonId1() + " | " + friendOfBob.getId().getPersonId2());
 
             Set<PersonHasInterest> stuffFriendLikes = friendOfBob.getPerson2().getLikes();
+
+            // Build common interests
 
             for (PersonHasInterest interest : stuffFriendLikes) {
                 //Tag tag = interest.getTag();
                 //System.out.println(interest.getPerson().getId() + " likes " + tag.getId());
                 Long tagId = interest.getTag().getId();
                 if (bobsFavoriteTags.contains(tagId)) {
-                    log.debug("tagId = {} is something Bob likes too", tagId);
-                }
-                if (stuffBobLikes.contains(interest)) {
-                    System.out.println("tag_id = " + interest.getTag().getId() + " name = " + interest.getPerson().getName());
+                    //log.debug("tagId = {} is something Bob likes too", tagId);
+                    //System.out.println("tag_id = " + interest.getTag().getId() + " name = " + interest.getPerson().getName());
+                    // Get Id and name and prettify the output
+                    String printId = insertRightPad(interest.getTag().getId().toString(), 12);
+                    String printName = insertRightPad(interest.getPerson().getName(), 12);
+
+                    interests.append("tag_id = ")
+                            .append(printId)
+                            .append("name = ")
+                            .append(printName)
+                            .append(LINE_BREAK);
                 }
             }
-
-
         }
-
-
-        /*
-        // Build common interests
-        for (PersonHasInterest p : resultList) {
-            interests.append(p.getPerson().getName())
-                    .append(" likes ")
-                    .append(p.getTag().getName())
-                    .append(LINE_BREAK);
-        }
-
-
-         */
 
         entityManager.close();
-
-
         log.debug("<-- getCommonInterestsOfMyFriends().");
         return interests.toString();
     }
+
 
     @Override
     public List<String> getCommonFriends(String id) {
@@ -188,5 +190,19 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
     @Override
     public List<String> getShortestFriendshipPath(String id) {
         return null;
+    }
+
+    /**
+     * Provides white space padding for a long list to help left-align its columns.
+     * Takes a string and pads the right side with white space characters
+     * until it reaches the given final length.
+     *
+     * @param inStr       the string that needs to be padded.
+     * @param finalLength The final length of the padded string.
+     * @return the padded string.
+     */
+    private String insertRightPad(String inStr, int finalLength) {
+        return (inStr + "                          "
+        ).substring(0, finalLength);
     }
 }

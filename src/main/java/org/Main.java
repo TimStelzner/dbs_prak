@@ -1,7 +1,7 @@
 package org;
 
 import lombok.extern.slf4j.Slf4j;
-import org.application.TransactionHandler;
+import org.application.UserInterface;
 import org.tables.parent.Place;
 
 import javax.persistence.*;
@@ -22,10 +22,10 @@ public class Main {
             //TransactionUtils.selectAll(SqlUtils.PERSON_KNOWS_SYMMETRIC);
             //TransactionUtils.getPost(001232L);
             //TransactionUtils.getPost(8400046488L);
-            //UserInterface ui = new UserInterface();
-            TransactionHandler th = new TransactionHandler();
-            String s = th.runTransactionFor(2, 2199023255625L);
-            System.out.println(s);
+            UserInterface ui = new UserInterface();
+            //TransactionHandler th = new TransactionHandler();
+            //String s = th.runTransactionFor(2, 2199023255625L);
+            //System.out.println(s);
 
         } catch (NoResultException e) {
             log.error("No match found for your query.", e);
