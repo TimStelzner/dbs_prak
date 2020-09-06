@@ -243,12 +243,12 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
      * @return
      */
     @Override
-    public String getPersonsWitMostCommonInterests(long id) {
+    public String getPersonsWitMostCommonInterests(long id) throws NoSuchElementException {
         log.debug("--> getPersonsWitMostCommonInterests(id = {})", id);
 
         // Setup variables
         EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
-        StringBuilder mostCommonInterests = new StringBuilder();
+        StringBuilder peers = new StringBuilder();
 
         String query = "SELECT c FROM PersonHasInterest c WHERE c.id.personId = :bob";
         Query typedQuery = entityManager.createQuery(query);
@@ -258,8 +258,8 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
         //Set<Tag> bobLikes = new HashSet<>();
         //Set<Person> peers = new HashSet<>();
         Map<Person, Integer> commonInterestsOfPeers = new HashMap<>();
+        // TODO this will overwrite people with the same amount of interests. Possibly problematic.
         TreeMap<Integer, Person> highscores = new TreeMap<>();
-
 
         // Create the set of Bobs favorite stuff
         for (PersonHasInterest p : resultList) {
@@ -273,7 +273,7 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
                 //peers.add(person);
                 // Add person and create new likes list if that person isn't already in the set
                 boolean personIsInPeerGroup = commonInterestsOfPeers.containsKey(person);
-                boolean personIsBob = person.getId() != id;
+                boolean personIsBob = person.getId() == id;
 
                 if (!personIsBob) {
                     if (!personIsInPeerGroup) {
@@ -287,43 +287,33 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
                 }
             }
         }
+
+        peers.append(LINE_BREAK)
+                .append("Person that share most interest with ")
+                .append(id)
+                .append(LINE_BREAK);
+
+        // Get all the persons who match the highscore
         Integer highscore = highscores.lastKey();
-        Person bestPeer = highscores.get(highscore);
-        log.info("best peer is id = {}, name = {}", bestPeer.getId(), bestPeer.getName());
-        log.info("{} has {} common interests with {}.", bestPeer.getName(), highscore, id);
-
-        // Figure out who has the most common interests with Bob. Beware, Bob is also in that list
-
-
-        // Create set of stuff that Bob likes
-        /*
-        if(!resultList.isEmpty()) {
-            PersonHasInterest firstResult = resultList.get(0);
-            Set<PersonHasInterest> bobLikes = firstResult.getPerson().getLikes();
-            Set<PersonHasInterest> likedByOthers = firstResult.getTag().getLikes();
-        } else {
-            return "Person does not exist or doesn't like anything."
+        Set<Map.Entry<Person, Integer>> entries = commonInterestsOfPeers.entrySet();
+        for (Map.Entry<Person, Integer> entry : entries) {
+            if (entry.getValue().equals(highscore)) {
+                Person peer = entry.getKey();
+                String peerId = insertRightPad(peer.getId().toString(), 18);
+                String peerName = insertRightPad(peer.getName(), 18);
+                String peerDegree = insertRightPad(highscore.toString(), 18);
+                peers.append("id = ")
+                        .append(peerId)
+                        .append("name = ")
+                        .append(peerName)
+                        .append("# of common interests = ")
+                        .append(peerDegree)
+                        .append(LINE_BREAK);
+            }
         }
 
-         */
-
-
-
-        /*
-        // Setup Outer Query: Get all the favorite tags of everyone.
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery criteriaQuery = criteriaBuilder.createQuery(PersonHasInterest.class);
-        Root root = criteriaQuery.from(PersonHasInterest.class);
-
-        // Setup Inner Query: Get all of Bobs favorite tags
-        Subquery subquery = criteriaQuery.subquery(Tag.class);
-        Root subRoot = subquery.from(PersonHasInterest.class);
-
-
-         */
-
         log.debug("<-- getPersonsWitMostCommonInterests().");
-        return "Hello World";
+        return peers.toString();
     }
 
     @Override

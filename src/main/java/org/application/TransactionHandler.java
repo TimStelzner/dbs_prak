@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.NoResultException;
+import java.util.NoSuchElementException;
 
 @Data
 @Slf4j
@@ -47,7 +48,7 @@ public class TransactionHandler {
             }
             log.info(queryResult);
 
-        } catch (NoResultException e) {
+        } catch (NoResultException | NoSuchElementException e) {
             log.info("No result found for given query.");
             log.debug("NoResultException.", e);
         } catch (Exception e) {
