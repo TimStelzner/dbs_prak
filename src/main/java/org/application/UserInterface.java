@@ -88,15 +88,35 @@ public class UserInterface {
         return userInput;
     }
 
+    /**
+     * Figure out how often the user needs to be prompted for a user id.
+     *
+     * @param option
+     */
     private void processUserInput(int option) {
         log.debug("--> processUserInput().");
+        Long userId = null;
+        Long userId2 = null;
+
+        // Prompt the user for either 1 or 2 person ids.
         if (option > 0 && option < 7) {
             System.out.println("Enter user id");
-            Long userId = Long.valueOf(getUserInput());
-            transactionHandler.runTransactionFor(option, userId);
+            userId = Long.valueOf(getUserInput());
         } else {
             System.out.println("You must enter a valid option.");
         }
+        if (option == 3) {
+            System.out.println("Enter second user id");
+            userId2 = Long.valueOf(getUserInput());
+        }
+
+        // Run TransactionHandler
+        if (userId2 == null) {
+            transactionHandler.runTransactionFor(option, userId);
+        } else {
+            transactionHandler.runTransactionFor(option, userId, userId2);
+        }
+
         log.debug("<-- processUserInput().");
     }
 

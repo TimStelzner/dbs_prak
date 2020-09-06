@@ -14,10 +14,24 @@ public class TransactionHandler {
         personRelated = new PersonRelatedImpl();
     }
 
-    public String runTransactionFor(int option, long id) {
-        log.debug("--> runTransactionFor(option = {}, id = {})", option, id);
+    public String runTransactionFor(int option, long... ids) {
+        log.debug("--> runTransactionFor(option = {}, id = {})", option, ids);
         String queryResult = "";
+        long id = 0;
+        long id2 = 0;
         try {
+
+            // Setup id parameters according to varargs
+            if (ids.length > 0) {
+                id = ids[0];
+                if (ids.length == 2) {
+                    id2 = ids[1];
+                }
+            } else {
+                throw new Exception("Method has received no parameters. At least 1 is required.");
+            }
+
+            // Process option and run corresponding method
             switch (option) {
                 case 1:
                     queryResult = personRelated.getProfile(id);
@@ -25,6 +39,11 @@ public class TransactionHandler {
                 case 2:
                     queryResult = personRelated.getCommonInterestsOfMyFriends(id);
                     break;
+                case 3:
+                    queryResult = personRelated.getCommonFriends(id, id2);
+                    break;
+                case 4:
+                    queryResult = personRelated.getPersonsWitMostCommonInterests(id);
             }
             log.info(queryResult);
 

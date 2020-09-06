@@ -35,6 +35,7 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
         // Run query
         person = typedQuery.getSingleResult();
 
+        // Build result
         profile.append("id = ")
                 .append(person.getId())
                 .append(LINE_BREAK)
@@ -104,11 +105,7 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
         // Setup variables
         EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
         StringBuilder interests = new StringBuilder();
-        PkpSymmetric person = null;
-        PersonHasInterest likes = null;
 
-
-        // TODO Not working
         // Setup query. Assume the referenced person from id is called Bob.
         String query = "SELECT c FROM PkpSymmetric c WHERE c.id.personId1 = :bob";
         //TypedQuery<PkpSymmetric> typedQuery = entityManager.createQuery(query, PkpSymmetric.class);
@@ -172,14 +169,75 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
     }
 
 
-    @Override
-    public List<String> getCommonFriends(String id) {
-        return null;
+    /**
+     * Finds common friends of two given person ids.
+     * For sake of simplicity, we call the first id "Bob" and the second id "Alice".
+     * Note, these do not represent the names of those persons from the database.
+     * TODO The transaction currently throws no error when invalid ids are entered?!
+     *
+     * @param bob
+     * @param alice
+     * @return
+     */
+    public String getCommonFriends(long bob, long alice) {
+        log.debug("--> getCommonFriends(bob={}, alice={})", bob, alice);
+        // Setup variables
+        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
+        StringBuilder commonFriends = new StringBuilder();
+
+        // Setup query. Find all friends of Bob and Alice mixed together.
+        String query = "SELECT c FROM PkpSymmetric c WHERE c.id.personId1 = :bob OR c.id.personId1 = :alice";
+        Query typedQuery = entityManager.createQuery(query);
+        typedQuery.setParameter("bob", bob);
+        typedQuery.setParameter("alice", alice);
+
+        // Run query.
+        List<PkpSymmetric> friendsOfBoth = typedQuery.getResultList();
+
+        // Separate friends of Bob and Alice into two sets
+        Set<Person> friendsOfBob = new HashSet<>();
+        Set<Person> friendsOfAlice = new HashSet<>();
+
+        for (PkpSymmetric f : friendsOfBoth) {
+            Long personId1 = f.getPerson1().getId();
+            Person friend = f.getPerson2();
+            if (personId1 == bob) {
+                friendsOfBob.add(friend);
+                log.debug(friend.getName() + " is a friend of bob.");
+            } else {
+                friendsOfAlice.add(friend);
+                log.debug(friend.getName() + " is a friend of alice.");
+            }
+        }
+        log.info("id = {} has {} friends.", bob, friendsOfBob.size());
+        log.info("id = {} has {} friends.", alice, friendsOfAlice.size());
+
+        // Find common friends of Bob and Alice
+        commonFriends.append("Common Friends:")
+                .append(LINE_BREAK);
+
+        for (Person p : friendsOfBob) {
+            if (friendsOfAlice.contains(p)) {
+                String commonFriendId = insertRightPad(p.getId().toString(), 18);
+                String commonFriend = insertRightPad(p.getName(), 18);
+                //System.out.println(commonFriend + " is a common friend.");
+                commonFriends.append("id = ")
+                        .append(commonFriendId)
+                        .append("name = ")
+                        .append(commonFriend)
+                        .append(LINE_BREAK);
+            }
+        }
+
+        log.debug("<-- getCommonFriends().");
+        return commonFriends.toString();
     }
 
     @Override
-    public List<String> getPersonsWitMostCommonInterests(String id) {
-        return null;
+    public String getPersonsWitMostCommonInterests(long id) {
+        log.debug("--> getPersonsWitMostCommonInterests(id = {})", id);
+        log.debug("<-- getPersonsWitMostCommonInterests().");
+        return "Hello World";
     }
 
     @Override

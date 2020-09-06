@@ -11,9 +11,9 @@ public interface PersonRelatedAPI {
 
     String getCommonInterestsOfMyFriends(long id);
 
-    List<String> getCommonFriends(String id);
+    String getCommonFriends(long id1, long id2);
 
-    List<String> getPersonsWitMostCommonInterests(String id);
+    String getPersonsWitMostCommonInterests(long id);
 
     List<String> getJobRecommendation(String id);
 
