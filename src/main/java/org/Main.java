@@ -1,10 +1,12 @@
 package org;
 
 import lombok.extern.slf4j.Slf4j;
-import org.application.UserInterface;
-import org.tables.parent.Place;
+import org.application.TransactionHandler;
 
-import javax.persistence.*;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
 
 /**
  * Main class for testing connecting with our database.
@@ -22,9 +24,9 @@ public class Main {
             //TransactionUtils.selectAll(SqlUtils.PERSON_KNOWS_SYMMETRIC);
             //TransactionUtils.getPost(001232L);
             //TransactionUtils.getPost(8400046488L);
-            UserInterface ui = new UserInterface();
-            //TransactionHandler th = new TransactionHandler();
-            //String s = th.runTransactionFor(4, 12094627905604L);
+            //UserInterface ui = new UserInterface();
+            TransactionHandler th = new TransactionHandler();
+            String s = th.runTransactionFor(5, 12094627905604L);
             //String s = th.runTransactionFor(2, 2199023255625L);
             //System.out.println(s);
 
@@ -42,6 +44,7 @@ public class Main {
         log.debug("<-- Main().");
     }
 
+    // TODO we can probably delete all these methods.
     /*
     public static void addPlace(Long id, String name, String url, String type, long is_part_of) {
         log.debug("--> addPlace().");
@@ -151,6 +154,7 @@ public class Main {
 
      */
 
+    /*
     public static void changeName(int id, String name) {
         log.debug("--> changeName().");
 
@@ -223,6 +227,8 @@ public class Main {
             entityManager.close();
         }
     }
+
+     */
 
 
 

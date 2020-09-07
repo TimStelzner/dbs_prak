@@ -228,6 +228,7 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
             }
         }
 
+        entityManager.close();
         log.debug("<-- getCommonFriends().");
         return commonFriends.toString();
     }
@@ -255,10 +256,9 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
         typedQuery.setParameter("bob", id);
         List<PersonHasInterest> resultList = typedQuery.getResultList();
 
-        //Set<Tag> bobLikes = new HashSet<>();
-        //Set<Person> peers = new HashSet<>();
+
         Map<Person, Integer> commonInterestsOfPeers = new HashMap<>();
-        // TODO this will overwrite people with the same amount of interests. Possibly problematic.
+        // TODO change tree map to Integer. We don't need a mapping, just the final score.
         TreeMap<Integer, Person> highscores = new TreeMap<>();
 
         // Create the set of Bobs favorite stuff
@@ -289,7 +289,7 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
         }
 
         peers.append(LINE_BREAK)
-                .append("Person that share most interest with ")
+                .append("Persons that share most interest with ")
                 .append(id)
                 .append(LINE_BREAK);
 
@@ -317,9 +317,22 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
     }
 
     @Override
-    public List<String> getJobRecommendation(String id) {
-        return null;
+    public String getJobRecommendation(long id) {
+        log.debug("--> getJobRecommendation(id = {}).", id);
+
+        // Setup variables
+        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
+        StringBuilder interests = new StringBuilder();
+
+        // Setup query. Assume the referenced person from id is called Bob.
+        String query = "SELECT c FROM PkpSymmetric c WHERE c.id.personId1 = :bob";
+
+
+        entityManager.close();
+        log.debug("<-- getJobRecommendation().");
+        return "Hello World!";
     }
+
 
     @Override
     public List<String> getShortestFriendshipPath(String id) {

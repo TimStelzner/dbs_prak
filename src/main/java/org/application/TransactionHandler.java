@@ -45,6 +45,8 @@ public class TransactionHandler {
                     break;
                 case 4:
                     queryResult = personRelated.getPersonsWitMostCommonInterests(id);
+                case 5:
+                    queryResult = personRelated.getJobRecommendation(id);
             }
             log.info(queryResult);
 
