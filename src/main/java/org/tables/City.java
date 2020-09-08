@@ -12,9 +12,8 @@ import java.util.Set;
 @Getter
 @Setter
 public class City extends Place {
-
     @ManyToOne(targetEntity = Country.class)
-    @JoinColumn(foreignKey = @ForeignKey(name = "city_is_part_of_fkey"))
+    @JoinColumn(name = "is_part_of", foreignKey = @ForeignKey(name = "city_is_part_of_fkey"))
     private Country isPartOf;
 
     @OneToMany(mappedBy = "city")

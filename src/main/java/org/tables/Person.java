@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.tables.composite.PersonHasInterest;
+import org.tables.composite.PersonStudiesAt;
+import org.tables.composite.PersonWorksAt;
 import org.tables.composite.PkpSymmetric;
 import org.tables.parent.BaseEntity;
 
@@ -72,5 +74,11 @@ public class Person extends BaseEntity {
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PersonHasInterest> likes = new HashSet<>();
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PersonWorksAt> jobs = new HashSet<>();
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PersonStudiesAt> universities = new HashSet<>();
 
 }

@@ -29,7 +29,7 @@ public class Comment extends Message {
     @JoinColumn(foreignKey = @ForeignKey(name = "comment_country_id_fkey"))
     private Country country;
 
-    @OneToMany(mappedBy = "replyOfComment")
+    @OneToMany(mappedBy = "replyOfComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 
     /*

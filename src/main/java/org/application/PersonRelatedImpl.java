@@ -3,9 +3,10 @@ package org.application;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.Main;
-import org.tables.Person;
-import org.tables.Tag;
+import org.tables.*;
 import org.tables.composite.PersonHasInterest;
+import org.tables.composite.PersonStudiesAt;
+import org.tables.composite.PersonWorksAt;
 import org.tables.composite.PkpSymmetric;
 
 import javax.persistence.EntityManager;
@@ -316,21 +317,185 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
         return peers.toString();
     }
 
+    /**
+     * This task is ambiguous. The following interpretation applies to this method:
+     * Will attempt to find a company where a friend is also working at,
+     * located in the same country (since companies are not located in cities).
+     * We define a current workplace of a person as the company id with the highest "workFrom" value in PersonWorksAt
+     * Simultaneously, will also attempt to find a university where a friend is enrolled in (ignoring class year),
+     * located in the same city (since universities are located in cities).
+     * We define a current university as the university id with the highest "classYear" value in PersonStudiesAt.
+     * Search will stop as soon as either a company or university is found.
+     *
+     * @param id
+     * @return
+     */
     @Override
     public String getJobRecommendation(long id) {
         log.debug("--> getJobRecommendation(id = {}).", id);
 
         // Setup variables
         EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
-        StringBuilder interests = new StringBuilder();
+        StringBuilder jobRecommendation = new StringBuilder();
 
         // Setup query. Assume the referenced person from id is called Bob.
         String query = "SELECT c FROM PkpSymmetric c WHERE c.id.personId1 = :bob";
+        Query typedQuery = entityManager.createQuery(query);
+        typedQuery.setParameter("bob", id);
+        List<PkpSymmetric> friendsOfBob = typedQuery.getResultList();
 
+        // Create friends list of Bob
+        // Exit if Bob has no friends
+        if (friendsOfBob.isEmpty()) {
+            return "Person does not exist or has no friends.";
+        }
+
+        // Get info on Bob
+        Person bob = friendsOfBob.get(0).getPerson1();
+        City cityOfBob = bob.getCity();
+        Country countryOfBob = cityOfBob.getIsPartOf();
+        //log.debug("{} {} lives in {}, {}", bob.getName(), bob.getSurname(), cityOfBob.getName(), countryOfBob.getName());
+        log.debug("name = {}", bob.getName());
+        log.debug("surename = {} ", bob.getSurname());
+        log.debug("city = {}", cityOfBob.getName());
+        log.debug("country = {}", cityOfBob.getIsPartOf().getName());
+
+
+        // Determine current workplace and/or university of Bob
+        Set<PersonWorksAt> employersOfBob = bob.getJobs();
+        Set<PersonStudiesAt> unisOfOBob = bob.getUniversities();
+        Company currentEmployerOfBob = getCurrentEmployerFor(bob);
+        University currentUniOfBob = getCurrentUniversityFor(bob);
+
+        log.debug("Studied last at {}", currentUniOfBob.getName());
+
+
+        jobRecommendation.append("Job Recommendation for ")
+                .append(bob.getName())
+                .append(" ")
+                .append(bob.getSurname())
+                .append(LINE_BREAK);
+        for (PkpSymmetric f : friendsOfBob) {
+            Person friend = f.getPerson2();
+            log.debug("{} is a friend of {}", friend.getId(), bob.getId());
+
+            // Determine if friend is currently working somewhere which applies for rules of recommendation
+            Company currentEmployerOfFriend = getCurrentEmployerFor(friend);
+            if (currentEmployerOfFriend == null) {
+                continue;
+            }
+            log.debug("current Employer of friend is {} located in {}", currentEmployerOfFriend.getName(), currentEmployerOfFriend.getCountry().getName());
+            // Setup rules of recommendation
+            boolean employerOfFriendIsLocatedWhereBobLives = currentEmployerOfFriend.getCountry().equals(countryOfBob);
+            boolean bobHasWorkHistory = !employersOfBob.isEmpty();
+
+            if (employerOfFriendIsLocatedWhereBobLives) {
+                boolean friendHasADifferentJob = true;
+                // If Bob has a work history, ensure that his friend isn't working for the same company already.
+                if (bobHasWorkHistory) {
+                    friendHasADifferentJob = !currentEmployerOfBob.equals(currentEmployerOfFriend);
+                }
+                if (friendHasADifferentJob) {
+                    log.debug("Found a Job match: Company = {} in {} and {} also lives in {}, {}",
+                            currentEmployerOfFriend.getName(),
+                            currentEmployerOfFriend.getCountry().getName(),
+                            bob.getName(),
+                            cityOfBob.getName(),
+                            countryOfBob.getName());
+                    jobRecommendation.append("Company = ")
+                            .append(currentEmployerOfFriend.getName())
+                            .append("\t id = ")
+                            .append(currentEmployerOfFriend.getId());
+                    break;
+                }
+            }
+
+            // Determine if friend is currently studying somewhere which applies for rules of recommendation
+            University currentUniOfFriend = getCurrentUniversityFor(friend);
+            if (currentUniOfFriend == null) {
+                continue;
+            }
+
+            // Setup rules of recommendation
+            boolean uniOfFriendIsWhereBobLives = currentUniOfFriend.getCity().equals(cityOfBob);
+            boolean bobHasStudyHistory = !unisOfOBob.isEmpty();
+
+            if (uniOfFriendIsWhereBobLives) {
+                boolean friendStudiesAtDifferentUni = true;
+                // If Bob has a study history, ensure that his friend is not enrolled in the same uni.
+                if (bobHasStudyHistory) {
+                    friendStudiesAtDifferentUni = !currentUniOfBob.equals(currentUniOfFriend);
+                }
+                if (friendStudiesAtDifferentUni) {
+                    log.debug("Found a Uni match: Uni = {} in {} and {} also lives in {}, {}",
+                            currentUniOfFriend.getName(),
+                            currentUniOfFriend.getCity().getName(),
+                            bob.getName(),
+                            cityOfBob.getName(),
+                            countryOfBob.getName());
+                    jobRecommendation.append("Uni  = ")
+                            .append(currentUniOfFriend.getName())
+                            .append("\t id = ")
+                            .append(currentUniOfFriend.getId());
+                    break;
+                }
+            }
+        }
 
         entityManager.close();
         log.debug("<-- getJobRecommendation().");
-        return "Hello World!";
+        return jobRecommendation.toString();
+    }
+
+    /**
+     * Finds current employer for a given list of jobs.
+     * Expects a list generated by PersonWorksAt.
+     *
+     * @param
+     * @return
+     */
+    private Company getCurrentEmployerFor(Person person) {
+        log.debug("--> getCurrentJobFor().");
+        Company currentEmployer = null;
+        Set<PersonWorksAt> jobHistory = person.getJobs();
+        boolean personHasJobHistory = !jobHistory.isEmpty();
+
+        if (personHasJobHistory) {
+            int latestYearOfEmployment = 0;
+            // Iterate through job history to determine current job
+            for (PersonWorksAt j : jobHistory) {
+                int year = j.getWorkFrom();
+                if (year > latestYearOfEmployment) {
+                    latestYearOfEmployment = year;
+                    currentEmployer = j.getCompany();
+                }
+            }
+            log.debug("{} Currently working at {}", person.getId(), currentEmployer.getName());
+        }
+        log.debug("<-- getCurrentJobFor().");
+        return currentEmployer;
+    }
+
+    private University getCurrentUniversityFor(Person person) {
+        log.debug("--> getCurrentUniversityFor().");
+
+        University currentUni = null;
+        Set<PersonStudiesAt> studyHistory = person.getUniversities();
+        boolean personHasStudyHistory = !studyHistory.isEmpty();
+
+        if (personHasStudyHistory) {
+            int latestYearOfEnrollment = 0;
+            for (PersonStudiesAt s : studyHistory) {
+                Integer classYear = s.getClassYear();
+                if (classYear > latestYearOfEnrollment) {
+                    latestYearOfEnrollment = classYear;
+                    currentUni = s.getUniversity();
+                }
+            }
+            log.debug("{} currently studying at {}", person.getId(), currentUni.getName());
+        }
+        log.debug("<-- getCurrentUniversityFor().");
+        return currentUni;
     }
 
 

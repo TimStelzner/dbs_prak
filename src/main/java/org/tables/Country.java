@@ -14,13 +14,13 @@ import java.util.Set;
 @Setter
 public class Country extends Place {
     @ManyToOne(targetEntity = Continent.class, fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = @ForeignKey(name = "country_is_part_of_fkey"))
+    @JoinColumn(name = "is_part_of", foreignKey = @ForeignKey(name = "country_is_part_of_fkey"))
     private Continent isPartOf;
 
-    @OneToMany(mappedBy = "country")
+    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Company> companies;
 
-    @OneToMany(mappedBy = "isPartOf")
+    @OneToMany(mappedBy = "isPartOf", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<City> cities;
 
     @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
