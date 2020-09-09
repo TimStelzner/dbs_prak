@@ -326,6 +326,8 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
      * located in the same city (since universities are located in cities).
      * We define a current university as the university id with the highest "classYear" value in PersonStudiesAt.
      * Search will stop as soon as either a company or university is found.
+     * TODO we could compare the year of work and study tables and conclude that a person is either
+     * TODO a student, a worker or both and then exclude job/uni accordingly.
      *
      * @param id
      * @return
@@ -500,8 +502,14 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
 
 
     @Override
-    public List<String> getShortestFriendshipPath(String id) {
-        return null;
+    public String getShortestFriendshipPath(long id, long id2) {
+        log.debug("--> getShortestFriendshipPath().");
+        StringBuilder shortestPath = new StringBuilder();
+
+        log.debug("<-- getShortestFriendshipPath().");
+
+        shortestPath.append("Hello World");
+        return shortestPath.toString();
     }
 
     /**

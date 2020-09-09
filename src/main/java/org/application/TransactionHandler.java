@@ -49,6 +49,8 @@ public class TransactionHandler {
                 case 5:
                     queryResult = personRelated.getJobRecommendation(id);
                     break;
+                case 6:
+                    queryResult = personRelated.getShortestFriendshipPath(id, id2);
             }
             log.info(queryResult);
 

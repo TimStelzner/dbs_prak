@@ -1,8 +1,9 @@
 package org.tables.composite;
 
-import jdk.nashorn.internal.ir.annotations.Immutable;
+
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Subselect;
 import org.tables.Person;
 import org.tables.composite.keys.PersonKnowsPersonKey;

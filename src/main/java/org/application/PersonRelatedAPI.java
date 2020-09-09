@@ -17,5 +17,5 @@ public interface PersonRelatedAPI {
 
     String getJobRecommendation(long id);
 
-    List<String> getShortestFriendshipPath(String id);
+    String getShortestFriendshipPath(long id, long id2);
 }

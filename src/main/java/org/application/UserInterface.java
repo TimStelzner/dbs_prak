@@ -105,7 +105,7 @@ public class UserInterface {
         } else {
             System.out.println("You must enter a valid option.");
         }
-        if (option == 3) {
+        if (option == 3 || option == 6) {
             System.out.println("Enter second user id");
             userId2 = Long.valueOf(getUserInput());
         }
