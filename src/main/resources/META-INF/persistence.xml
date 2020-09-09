@@ -37,6 +37,7 @@
         <class>org.tables.composite.PostHasTag</class>
         <class>org.tables.composite.CommentHasTag</class>
         <class>org.tables.composite.PkpSymmetric</class>
+        <class>org.tables.procedures.FamiliarityPath</class>
         <properties>
             <!-- Database Driver -->
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
@@ -50,8 +51,8 @@
                       value="0e669bc35dac65d5a1dbea8af33a6d5ea4fc727e09d1be1f7d4ef239fd592b6f"/>
             <!-- Database Dialect -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL95Dialect"/>
-            <!-- create / create-drop / update -->
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <!-- This allows Hibernate to make changes to the mapped tables in the database.-->
+            <!-- <property name="hibernate.hbm2ddl.auto" value="update"/> -->
             <property name="connection.url"
                       value="jdbc:postgresql://ec2-54-75-244-161.eu-west-1.compute.amazonaws.com/da4qjh8735ag9"/>
             <property name="hibernate.connection.username" value="cyinytmuchapmd"/>

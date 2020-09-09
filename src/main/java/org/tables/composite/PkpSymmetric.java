@@ -30,5 +30,4 @@ public class PkpSymmetric {
     @MapsId("personId2")
     @JoinColumn(name = "person_id2")
     private Person person2;
-
 }

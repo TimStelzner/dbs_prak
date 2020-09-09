@@ -8,9 +8,11 @@ import org.tables.composite.PersonHasInterest;
 import org.tables.composite.PersonStudiesAt;
 import org.tables.composite.PersonWorksAt;
 import org.tables.composite.PkpSymmetric;
+import org.tables.procedures.FamiliarityPath;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.TypedQuery;
 import java.util.*;
 
@@ -504,11 +506,49 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
     @Override
     public String getShortestFriendshipPath(long id, long id2) {
         log.debug("--> getShortestFriendshipPath().");
+        // Setup variables
+        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
         StringBuilder shortestPath = new StringBuilder();
+
+
+        // Defined stored procedure
+        /*
+        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("my_function");
+        query.registerStoredProcedureParameter("id1", Long.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("id2", Long.class, ParameterMode.IN );
+        query.registerStoredProcedureParameter("table", Query.class, ParameterMode.OUT);
+         */
+
+        StoredProcedureQuery query = entityManager.createNamedStoredProcedureQuery("myFunction");
+
+        // set input parameter
+        query.setParameter("id1", id);
+        query.setParameter("id2", id2);
+
+        // call the stored procedure and get the result
+        query.execute();
+        List<FamiliarityPath> resultList = query.getResultList();
+        shortestPath.append("Shortest paths from ")
+                .append(id)
+                .append(" to ")
+                .append(id2)
+                .append(LINE_BREAK);
+        for (FamiliarityPath r : resultList) {
+            shortestPath.append(r.getPathString())
+                    .append(LINE_BREAK);
+        }
+
+        // Query typedQuery = (Query) query.getOutputParameterValue("table");
+        //List<FamiliarityPath> resultList = typedQuery.getResultList();
+
+
+        //Integer increment = (Integer)query.getOutputParameterValue("increment");
+        //log.info("Calculation result  = " + increment);
 
         log.debug("<-- getShortestFriendshipPath().");
 
-        shortestPath.append("Hello World");
+        //shortestPath.append(increment);
+        entityManager.close();
         return shortestPath.toString();
     }
 
