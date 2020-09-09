@@ -1,0 +1,52 @@
+plugins {
+    id 'java-library'
+    id "io.freefair.lombok" version "4.1.6"
+    id 'application'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'idea'
+apply plugin: 'java-library'
+apply plugin: 'application'
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClassName = "org.Main"
+}
+
+sourceSets {
+    main {
+        java{
+            srcDirs("src/java", "src/resources")
+        }
+    }
+}
+
+run{
+    standardInput = System.in
+}
+
+dependencies {
+    implementation group: 'junit', name: 'junit', version: '4.12'
+    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.29'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.29'
+    implementation group: 'org.hibernate', name: 'hibernate-gradle-plugin', version: '5.4.20.Final'
+    implementation group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.4.20.Final'
+    implementation 'org.projectlombok:lombok:1.18.12'
+    implementation group: 'org.clojure', name: 'java.jdbc', version: '0.7.11'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+    implementation group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: '1.0.2.Final'
+    //implementation group: 'org.postgresql', name: 'postgresql', version: '9.3-1100-jdbc4'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.15'
+    // Needed because Hibernate does not support SQL arrays out of the box
+    implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.9.13'
+    implementation group: 'org.apache.commons', name: 'commons-text', version: '1.9'
+    // Used for Apache Commons Configuration Files
+    implementation group: 'commons-configuration', name: 'commons-configuration', version: '1.10'
+    implementation group: 'org.simpleframework', name: 'simple-xml', version: '2.7.1'
+}
