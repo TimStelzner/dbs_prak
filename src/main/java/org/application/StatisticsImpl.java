@@ -2,6 +2,7 @@ package org.application;
 
 import lombok.extern.slf4j.Slf4j;
 import org.Main;
+import org.tables.Comment;
 import org.tables.TagClass;
 import org.tables.composite.TagClassIsSubclassOf;
 
@@ -10,7 +11,7 @@ import javax.persistence.Query;
 import java.util.*;
 
 @Slf4j
-public class StatisticsImpl implements StatisticAPI {
+public class StatisticsImpl extends ConsoleUtils implements StatisticAPI {
 
     private final EntityManager entityManager;
 
@@ -26,8 +27,6 @@ public class StatisticsImpl implements StatisticAPI {
     public String getTagClassHierarchy(long tagId) {
         log.debug("--> getTagClassHierarchy(tagId = {})", tagId);
         StringBuilder hierarchy = new StringBuilder();
-        hierarchy.append("Hello World!")
-                .append(LINE_BREAK);
 
         // Setup query. Assume the referenced person from id is called Bob.
         String query = "SELECT c FROM TagClassIsSubclassOf c WHERE c.id.parentId = :id";
@@ -41,9 +40,18 @@ public class StatisticsImpl implements StatisticAPI {
             return "Tag class does not exist or has no children.";
         }
         TagClass root = resultList.get(0).getParentTag();
-        Map<String, TagClass> tagClassTreemap = new TreeMap<>();
+        Map<String, TagClass> tagClassTreemap = new LinkedHashMap<>();
         buildTagHierarchy(root, "1", tagClassTreemap);
-        
+
+        Set<Map.Entry<String, TagClass>> entrySet = tagClassTreemap.entrySet();
+        for (Map.Entry<String, TagClass> e : entrySet) {
+            String key = insertRightPad(e.getKey(), 12);
+            String tagClassName = insertRightPad(e.getValue().getName(), 25);
+            hierarchy.append(LINE_BREAK)
+                    .append(key)
+                    .append(tagClassName);
+        }
+
         /*
         int counter = 1;
         //log.info(counter + " : " + tagId);
@@ -65,11 +73,12 @@ public class StatisticsImpl implements StatisticAPI {
     private void buildTagHierarchy(TagClass node, String depth, Map<String, TagClass> hierarchy) {
         log.debug("--> buildTagHierarchy(node = {}, {})", node.getId(), node.getName());
         //Set<TagClass> children = extractChildNodes(node.getChildren());
-        //log.debug("children size = {}", children.size());
         Set<TagClassIsSubclassOf> children = node.getParents();
+        log.debug("children size = {}", children.size());
 
         hierarchy.put(depth, node);
-        log.info("{} : {}", depth, node.getName());
+
+        log.debug("{} : {}", depth, node.getName());
         boolean nodeHasChildren = !children.isEmpty();
         if (nodeHasChildren) {
             int counter = 1;
@@ -96,8 +105,34 @@ public class StatisticsImpl implements StatisticAPI {
     }
 
     @Override
-    public String getPopularComments(long likes) {
-        return null;
+    public String getPopularComments(int likes) {
+        log.debug("--> getPopularComments().");
+        StringBuilder popularComments = new StringBuilder();
+
+        // Setup query. Assume the referenced person from id is called Bob.
+        String query = "SELECT c FROM Comment c WHERE c.likedBy.size > :minimumLikes";
+        Query typedQuery = entityManager.createQuery(query, Comment.class);
+        typedQuery.setParameter("minimumLikes", likes);
+
+        // Run query
+        List<Comment> resultList = typedQuery.getResultList();
+
+        // Build Comments
+        for (Comment comment : resultList) {
+            String id = insertRightPad(comment.getId().toString(), 18);
+            String name = comment.getPerson().getName() + " ";
+            String surname = comment.getPerson().getSurname();
+            String fullName = insertRightPad(name + surname, 18);
+            popularComments.append(LINE_BREAK)
+                    .append("id = ")
+                    .append(id)
+                    .append("Name = ")
+                    .append(fullName);
+
+        }
+
+        log.debug("<-- getPopularComments().");
+        return popularComments.toString();
     }
 
     @Override

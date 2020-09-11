@@ -12,6 +12,7 @@
             <Entry>5 : getJobRecommendation</Entry>
             <Entry>6 : getShortestFriendshipPath</Entry>
             <Entry>7 : getTagClassHierarchy</Entry>
+            <Entry>8 : getPopularComments</Entry>
             <Entry>0 : Quit Program</Entry>
         </Entries>
     </RootMenu>

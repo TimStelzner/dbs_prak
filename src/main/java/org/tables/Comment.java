@@ -2,6 +2,7 @@ package org.tables;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.tables.composite.PersonLikesComment;
 import org.tables.parent.Message;
 
 import javax.persistence.*;
@@ -32,12 +33,7 @@ public class Comment extends Message {
     @OneToMany(mappedBy = "replyOfComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 
-    /*
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(name = "comment_has_tag",
-            joinColumns = {@JoinColumn(name = "comment_id")},
-            inverseJoinColumns = {@JoinColumn(name = "tag_id")})
-    private Set<Tag> tags;
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PersonLikesComment> likedBy = new HashSet<>();
 
-     */
 }

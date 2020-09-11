@@ -5,7 +5,7 @@ public interface StatisticAPI {
 
     String getTagClassHierarchy(long tagId);
 
-    String getPopularComments(long likes);
+    String getPopularComments(int likes);
 
     String getMostPostingCountry();
 }

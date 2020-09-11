@@ -57,6 +57,9 @@ public class TransactionHandler {
                 case 7:
                     queryResult = statisticsRelated.getTagClassHierarchy(id);
                     break;
+                case 8:
+                    queryResult = statisticsRelated.getPopularComments((int) id);
+                    break;
             }
             log.info(queryResult);
 
