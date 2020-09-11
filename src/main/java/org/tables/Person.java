@@ -54,12 +54,6 @@ public class Person extends BaseEntity {
     @Column(columnDefinition = "text[]", nullable = false)
     private String[] speaks;
 
-    /*
-    @ManyToMany(mappedBy = "persons")
-    private Set<Forum> forums = new HashSet<>();
-
-     */
-
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Post> post = new HashSet<>();
 
@@ -69,7 +63,7 @@ public class Person extends BaseEntity {
     @OneToMany(mappedBy = "person1", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PkpSymmetric> knows = new HashSet<>();
 
-    @OneToMany(mappedBy = "person1", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "person2", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PkpSymmetric> known = new HashSet<>();
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)

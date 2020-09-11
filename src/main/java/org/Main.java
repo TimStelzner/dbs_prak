@@ -1,7 +1,7 @@
 package org;
 
 import lombok.extern.slf4j.Slf4j;
-import org.application.UserInterface;
+import org.application.TransactionHandler;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
@@ -24,9 +24,11 @@ public class Main {
             //TransactionUtils.selectAll(SqlUtils.PERSON_KNOWS_SYMMETRIC);
             //TransactionUtils.getPost(001232L);
             //TransactionUtils.getPost(8400046488L);
-            UserInterface ui = new UserInterface();
-            //TransactionHandler th = new TransactionHandler();
+            //UserInterface ui = new UserInterface();
+            TransactionHandler th = new TransactionHandler();
             //th.runTransactionFor(6, 3298534883405L, 3298534883392L);
+            //th.runTransactionFor(7, 149L);
+            th.runTransactionFor(7, 211L);
             //String s = th.runTransactionFor(5, 12094627905604L);
             //String s = th.runTransactionFor(2, 2199023255625L);
             //System.out.println(s);

@@ -2,7 +2,6 @@ package org.tables.composite;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.tables.Tag;
 import org.tables.TagClass;
 import org.tables.composite.keys.TagClassIsSubclassOfKey;
 
@@ -18,7 +17,7 @@ public class TagClassIsSubclassOf {
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("childId")
     @JoinColumn(name = "child_id")
-    private Tag childTag;
+    private TagClass childTag;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("parentId")

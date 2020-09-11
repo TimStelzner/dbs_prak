@@ -12,6 +12,7 @@ import java.util.Objects;
 @Getter
 @Setter
 public class PersonKnowsPersonKey implements Serializable {
+
     @Column(nullable = false)
     private Long personId1;
 

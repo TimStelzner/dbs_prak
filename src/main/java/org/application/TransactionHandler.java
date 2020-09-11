@@ -10,9 +10,11 @@ import java.util.NoSuchElementException;
 @Slf4j
 public class TransactionHandler {
     private PersonRelatedImpl personRelated;
+    private StatisticsImpl statisticsRelated;
 
     public TransactionHandler() {
         personRelated = new PersonRelatedImpl();
+        statisticsRelated = new StatisticsImpl();
     }
 
     public String runTransactionFor(int option, long... ids) {
@@ -51,6 +53,10 @@ public class TransactionHandler {
                     break;
                 case 6:
                     queryResult = personRelated.getShortestFriendshipPath(id, id2);
+                    break;
+                case 7:
+                    queryResult = statisticsRelated.getTagClassHierarchy(id);
+                    break;
             }
             log.info(queryResult);
 
@@ -63,5 +69,10 @@ public class TransactionHandler {
             log.debug("<-- runTransactionFor().");
         }
         return queryResult;
+    }
+
+    public void closeTransactionHandler() {
+        // TODO personRelated is missing
+        statisticsRelated.closeStatistics();
     }
 }

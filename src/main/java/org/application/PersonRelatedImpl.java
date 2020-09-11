@@ -1,6 +1,5 @@
 package org.application;
 
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.Main;
 import org.tables.*;
@@ -17,7 +16,6 @@ import javax.persistence.TypedQuery;
 import java.util.*;
 
 @Slf4j
-@Data
 public class PersonRelatedImpl implements PersonRelatedAPI {
 
     @Override

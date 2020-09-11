@@ -25,15 +25,4 @@ public class Tag {
 
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PersonHasInterest> likes = new HashSet<>();
-
-    /*
-    @ManyToMany(mappedBy = "tags")
-    private Set<Comment> comments = new HashSet<>();
-
-
-    @ManyToMany(mappedBy = "tags")
-    private Set<Forum> forums = new HashSet<>();
-
-     */
-
 }

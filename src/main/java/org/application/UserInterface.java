@@ -47,6 +47,7 @@ public class UserInterface {
         try {
             System.out.println("Good Bye!");
             scanner.close();
+            transactionHandler.closeTransactionHandler();
         } catch (IOException e) {
             log.error("IOException occurred.", e);
         }
@@ -97,9 +98,9 @@ public class UserInterface {
         log.debug("--> processUserInput().");
         Long userId = null;
         Long userId2 = null;
-
+        // TODO for tagClassHierarchy we have to enter a tag class id
         // Prompt the user for either 1 or 2 person ids.
-        if (option > 0 && option < 7) {
+        if (option > 0 && option < 10) {
             System.out.println("Enter user id");
             userId = Long.valueOf(getUserInput());
         } else {
