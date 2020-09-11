@@ -22,6 +22,7 @@ public class TagClass {
     @Column
     private String url;
 
+    // TODO parents and children are switched around. I dont get it.
     @OneToMany(mappedBy = "parentTag", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TagClassIsSubclassOf> parents = new HashSet<>();
 

@@ -40,45 +40,46 @@ public class StatisticsImpl implements StatisticAPI {
         if (resultList.isEmpty()) {
             return "Tag class does not exist or has no children.";
         }
-
+        TagClass root = resultList.get(0).getParentTag();
         Map<String, TagClass> tagClassTreemap = new TreeMap<>();
-        Set<TagClass> visited = new HashSet<>();
+        buildTagHierarchy(root, "1", tagClassTreemap);
+        
+        /*
         int counter = 1;
-        log.info(counter + " : " + tagId);
+        //log.info(counter + " : " + tagId);
         for (TagClassIsSubclassOf r : resultList) {
             // TODO recursively iterate through resultList
             TagClass childTag = r.getChildTag();
-            visited.add(childTag);
             //log.info(counter + " : " + childTag.getId());
-            buildTagHierarchy(childTag, String.valueOf(counter), tagClassTreemap, visited);
+            buildTagHierarchy(childTag, String.valueOf(counter), tagClassTreemap);
             counter++;
         }
+
+         */
 
 
         log.debug("<-- getTagClassHierarchy(tagId = {})", tagId);
         return hierarchy.toString();
     }
 
-    private void buildTagHierarchy(TagClass node, String depth, Map<String, TagClass> hierarchy, Set<TagClass> visited) {
+    private void buildTagHierarchy(TagClass node, String depth, Map<String, TagClass> hierarchy) {
         log.debug("--> buildTagHierarchy(node = {}, {})", node.getId(), node.getName());
         //Set<TagClass> children = extractChildNodes(node.getChildren());
         //log.debug("children size = {}", children.size());
         Set<TagClassIsSubclassOf> children = node.getParents();
 
         hierarchy.put(depth, node);
-        visited.add(node);
-        log.info("{} : {}", depth, node.getId());
+        log.info("{} : {}", depth, node.getName());
         boolean nodeHasChildren = !children.isEmpty();
-        boolean nodeIsNew = !visited.contains(node);
-        if (nodeHasChildren && nodeIsNew) {
+        if (nodeHasChildren) {
             int counter = 1;
             for (TagClassIsSubclassOf c : children) {
                 String newDepth = depth + "." + counter;
-                Long childId = c.getChildTag().getId();
-                Long parentId = c.getParentTag().getId();
-                log.info("child id = {} ", childId);
-                log.info("parent id = {}", parentId);
-                buildTagHierarchy(c.getChildTag(), newDepth, hierarchy, visited);
+                //Long childId = c.getChildTag().getId();
+                //Long parentId = c.getParentTag().getId();
+                //log.info("child id = {} ", childId);
+                //log.info("parent id = {}", parentId);
+                buildTagHierarchy(c.getChildTag(), newDepth, hierarchy);
                 counter++;
             }
         }
