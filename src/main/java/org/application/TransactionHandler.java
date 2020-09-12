@@ -30,9 +30,13 @@ public class TransactionHandler {
                 if (ids.length == 2) {
                     id2 = ids[1];
                 }
-            } else {
+            }
+            /*
+            else {
                 throw new Exception("Method has received no parameters. At least 1 is required.");
             }
+
+             */
 
             // Process option and run corresponding method
             switch (option) {
@@ -59,6 +63,9 @@ public class TransactionHandler {
                     break;
                 case 8:
                     queryResult = statisticsRelated.getPopularComments((int) id);
+                    break;
+                case 9:
+                    queryResult = statisticsRelated.getMostPostingCountry();
                     break;
             }
             log.info(queryResult);

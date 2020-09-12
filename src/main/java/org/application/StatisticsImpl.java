@@ -3,6 +3,7 @@ package org.application;
 import lombok.extern.slf4j.Slf4j;
 import org.Main;
 import org.tables.Comment;
+import org.tables.Country;
 import org.tables.TagClass;
 import org.tables.composite.TagClassIsSubclassOf;
 
@@ -137,6 +138,40 @@ public class StatisticsImpl extends ConsoleUtils implements StatisticAPI {
 
     @Override
     public String getMostPostingCountry() {
-        return null;
+        log.debug("--> getMostPostingCountry().");
+        StringBuilder mostMessages = new StringBuilder();
+
+        // Setup query. Assume the referenced person from id is called Bob.
+        String query = "SELECT c FROM Country c";
+        Query typedQuery = entityManager.createQuery(query, Country.class);
+
+        // Run query
+        List<Country> resultList = typedQuery.getResultList();
+        Stack<Country> countries = new Stack<>();
+        int maximum = 0;
+        for (Country country : resultList) {
+            int numberOfComments = country.getComments().size();
+            int numberOfPosts = country.getPosts().size();
+            int numberOfMessages = numberOfComments + numberOfPosts;
+            if (numberOfMessages > maximum) {
+                maximum = numberOfMessages;
+                countries.push(country);
+                log.debug("{} added to list of potential candidates", country.getName());
+            }
+        }
+
+        // Build String
+        Country mostPostingCountry = countries.pop();
+        mostMessages.append(LINE_BREAK)
+                .append("Most post country: ")
+                .append(mostPostingCountry.getName())
+                .append(" with ")
+                .append(mostPostingCountry.getPosts().size())
+                .append(" # of posts and ")
+                .append(mostPostingCountry.getComments().size())
+                .append(" # of comments.")
+                .append(LINE_BREAK);
+        log.debug("<-- getMostPostingCountry().");
+        return mostMessages.toString();
     }
 }

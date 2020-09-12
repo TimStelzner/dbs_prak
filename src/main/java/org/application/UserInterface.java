@@ -101,10 +101,10 @@ public class UserInterface {
         // TODO for tagClassHierarchy we have to enter a tag class id not user id
         // TODO for popularComment we have to enter a minimum number of likes
         // Prompt the user for either 1 or 2 person ids.
-        if (option > 0 && option < 10) {
+        if (option > 0 && option < 9) {
             System.out.println("Enter user id");
             userId = Long.valueOf(getUserInput());
-        } else {
+        } else if (option != 9) {
             System.out.println("You must enter a valid option.");
         }
         if (option == 3 || option == 6) {
@@ -113,7 +113,9 @@ public class UserInterface {
         }
 
         // Run TransactionHandler
-        if (userId2 == null) {
+        if (userId == null) {
+            transactionHandler.runTransactionFor(option);
+        } else if (userId2 == null) {
             transactionHandler.runTransactionFor(option, userId);
         } else {
             transactionHandler.runTransactionFor(option, userId, userId2);
