@@ -16,7 +16,7 @@ import javax.persistence.TypedQuery;
 import java.util.*;
 
 @Slf4j
-public class PersonRelatedImpl implements PersonRelatedAPI {
+public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI {
 
     @Override
     public String getProfile(long id) {
@@ -501,6 +501,8 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
     }
 
 
+    // TODO Need to handle case where user typed the same id twice
+    // TODO What happens when second id doesnt exist? Both? First?
     @Override
     public String getShortestFriendshipPath(long id, long id2) {
         log.debug("--> getShortestFriendshipPath().");
@@ -548,19 +550,5 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
         //shortestPath.append(increment);
         entityManager.close();
         return shortestPath.toString();
-    }
-
-    /**
-     * Provides white space padding for a long list to help left-align its columns.
-     * Takes a string and pads the right side with white space characters
-     * until it reaches the given final length.
-     *
-     * @param inStr       the string that needs to be padded.
-     * @param finalLength The final length of the padded string.
-     * @return the padded string.
-     */
-    private String insertRightPad(String inStr, int finalLength) {
-        return (inStr + "                          "
-        ).substring(0, finalLength);
     }
 }

@@ -6,7 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-// TODO Should put this in PersonRelatedImpl and UserInterface
+// TODO Should put this in UserInterface
 
 /**
  * Provides utility methods for the user interface and console input/output.

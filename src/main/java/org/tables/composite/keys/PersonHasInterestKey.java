@@ -8,6 +8,11 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Provides Hibernate Mappings for Composite Primary Keys, concerning {@link org.tables.composite.PersonHasInterest}.
+ *
+ * @see org.tables.composite.PersonHasInterest
+ */
 @Embeddable
 @Getter
 @Setter

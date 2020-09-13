@@ -8,6 +8,7 @@ import org.tables.composite.keys.TagHasTypeKey;
 
 import javax.persistence.*;
 
+
 @Entity
 @Getter
 @Setter

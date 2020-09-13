@@ -9,6 +9,11 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+/**
+ * Provides Hibernate Mappings for Composite Primary Keys, concerning {@link org.tables.composite.PersonWorksAtDeleted}.
+ *
+ * @see org.tables.composite.PersonWorksAtDeleted
+ */
 @Embeddable
 @Getter
 @Setter

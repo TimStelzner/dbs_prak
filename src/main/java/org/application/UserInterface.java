@@ -1,14 +1,21 @@
 package org.application;
 
 import lombok.extern.slf4j.Slf4j;
+import org.Main;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
+/**
+ * Provides a user interface to navigate the database functions concerning both
+ * {@link PersonRelatedImpl} and {@link StatisticsImpl}.
+ * Provides a starting point for {@link Main} to initialize the application,
+ * uses {@link ConsoleUtils} to get user input and forwards it to {@link TransactionHandler}.
+ */
 @Slf4j
-public class UserInterface {
+public class UserInterface extends ConsoleUtils {
     private static BufferedReader scanner;
     private List<String> mainMenu;
     private TransactionHandler transactionHandler;
@@ -19,11 +26,9 @@ public class UserInterface {
 
     public void displayUserInterface() throws NullPointerException {
         log.debug("--> displayUserInterface().");
-
         for (String s : mainMenu) {
             System.out.println(s);
         }
-
         log.debug("<-- displayUserInterface().");
     }
 
@@ -71,6 +76,7 @@ public class UserInterface {
         close();
     }
 
+    /*
     private long getUserInput() {
         log.debug("--> processUserInput().");
         long userInput = -1;
@@ -88,6 +94,8 @@ public class UserInterface {
         }
         return userInput;
     }
+
+     */
 
     /**
      * Figure out how often the user needs to be prompted for a user id.

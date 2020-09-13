@@ -74,7 +74,7 @@ public class StatisticsImpl extends ConsoleUtils implements StatisticAPI {
     private void buildTagHierarchy(TagClass node, String depth, Map<String, TagClass> hierarchy) {
         log.debug("--> buildTagHierarchy(node = {}, {})", node.getId(), node.getName());
         //Set<TagClass> children = extractChildNodes(node.getChildren());
-        Set<TagClassIsSubclassOf> children = node.getParents();
+        Set<TagClassIsSubclassOf> children = node.getParentOf();
         log.debug("children size = {}", children.size());
 
         hierarchy.put(depth, node);
