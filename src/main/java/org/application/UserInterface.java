@@ -20,6 +20,9 @@ public class UserInterface extends ConsoleUtils {
     private List<String> mainMenu;
     private TransactionHandler transactionHandler;
 
+    /**
+     * Standard no argument constructor. Triggers {@link #initialize()}.
+     */
     public UserInterface() {
         initialize();
     }
