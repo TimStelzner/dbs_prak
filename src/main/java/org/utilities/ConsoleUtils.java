@@ -1,4 +1,4 @@
-package org.application;
+package org.utilities;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +14,7 @@ import java.io.InputStreamReader;
 @Slf4j
 public abstract class ConsoleUtils {
     // TODO Is this the best approach? We have another scanner object in UserInterface. Yuck!
-    static long getUserInput() {
+    protected static long getUserInput() {
         log.debug("--> processUserInput().");
 
         long userInput = -1;
@@ -43,7 +43,7 @@ public abstract class ConsoleUtils {
      * @param finalLength The final length of the padded string.
      * @return the padded string.
      */
-    static String insertRightPad(String inStr, int finalLength) {
+    protected static String insertRightPad(String inStr, int finalLength) {
         return (inStr + "                          "
         ).substring(0, finalLength);
     }

@@ -8,11 +8,9 @@ import org.tables.composite.PersonStudiesAt;
 import org.tables.composite.PersonWorksAt;
 import org.tables.composite.PkpSymmetric;
 import org.tables.procedures.FamiliarityPath;
+import org.utilities.ConsoleUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.StoredProcedureQuery;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.*;
 
 @Slf4j
@@ -32,7 +30,7 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
         TypedQuery<Person> typedQuery = entityManager.createQuery(query, Person.class);
         typedQuery.setParameter("id", id);
 
-        // Run query
+        // Run query. No need to validate, because getSingleResult throws No Result Exceptions.
         person = typedQuery.getSingleResult();
 
         // Build result
@@ -48,53 +46,52 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
                 .append("name = ")
                 .append(person.getName())
                 .append(LINE_BREAK)
-                .append("gender =")
+                .append("gender = ")
                 .append(person.getGender())
                 .append(LINE_BREAK)
-                .append("birthday =")
+                .append("birthday = ")
                 .append(person.getBirthday())
                 .append(LINE_BREAK)
-                .append("browser used =")
+                .append("browser used = ")
                 .append(person.getBrowser_used())
                 .append(LINE_BREAK)
-                .append("location ip =")
+                .append("location ip = ")
                 .append(person.getLocationIp())
                 .append(LINE_BREAK)
-                .append("city =")
+                .append("city = ")
                 .append(person.getCity().getName())
                 .append(LINE_BREAK)
                 .append("joined = ")
                 .append(person.getCreationDate())
                 .append(LINE_BREAK);
 
-        // List all the spoken languages
+        // List all the spoken languages. Note, this will create a trailing comma.
         profile.append("speaks [");
         String[] languages = person.getSpeaks();
         for (String language : languages) {
             profile.append(language)
                     .append(",");
         }
-        // Replace last comma with square bracket
+
+        // Replace trailing comma with square bracket
         int lastCommaPosition = profile.lastIndexOf(",");
         profile.replace(lastCommaPosition, lastCommaPosition + 1, "]");
         profile.append(LINE_BREAK);
 
-        // List all the user's emails
+        // List all the user's emails.  Note, this will create a trailing comma.
         profile.append("Emails: [");
         String[] emails = person.getEmails();
         for (String email : emails) {
             profile.append(email)
                     .append(",");
         }
-        // Replace last comma with square bracket
+        // Replace trailing comma with square bracket
         lastCommaPosition = profile.lastIndexOf(",");
         profile.replace(lastCommaPosition, lastCommaPosition + 1, "]");
         profile.append(LINE_BREAK);
 
-
         entityManager.close();
         log.debug("<-- getProfile().");
-
         return profile.toString();
     }
 
@@ -117,7 +114,8 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
 
         // Exit if Bob has no friends
         if (bobsFriends.isEmpty()) {
-            return "Person does not exist or has no friends.";
+            System.out.println("Person does not exist or has no friends.");
+            throw new NoResultException("Person does not exist or has no friends.");
         }
 
         String bob = bobsFriends.get(0).getPerson1().getName();
@@ -168,12 +166,18 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
         return interests.toString();
     }
 
+    private void validateQueryResults(List result) {
+        if (result.isEmpty()) {
+            System.out.println("No results were found for this query. Person does not exist or has no friends.");
+            throw new NoResultException("No results were found for this query.");
+        }
+    }
+
 
     /**
      * Finds common friends of two given person ids.
-     * For sake of simplicity, we call the first id "Bob" and the second id "Alice".
+     * For sake of simplicity, we refer to the first id as "Bob" and to the second id as "Alice".
      * Note, these do not represent the names of those persons from the database.
-     * TODO The transaction currently throws no error when invalid ids are entered?!
      *
      * @param bob
      * @param alice
@@ -194,10 +198,12 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
         // Run query.
         List<PkpSymmetric> friendsOfBoth = typedQuery.getResultList();
 
+        // Validate query
+        validateQueryResults(friendsOfBoth);
+
         // Separate friends of Bob and Alice into two sets
         Set<Person> friendsOfBob = new HashSet<>();
         Set<Person> friendsOfAlice = new HashSet<>();
-
         for (PkpSymmetric f : friendsOfBoth) {
             Long personId1 = f.getPerson1().getId();
             Person friend = f.getPerson2();
@@ -209,24 +215,49 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
                 log.debug(friend.getName() + " is a friend of alice.");
             }
         }
-        log.info("id = {} has {} friends.", bob, friendsOfBob.size());
-        log.info("id = {} has {} friends.", alice, friendsOfAlice.size());
+
+        // Validate that queried users have friends
+        if (friendsOfBob.isEmpty()) {
+            return "id = " + bob + " currently has no friends.";
+        }
+        if (friendsOfAlice.isEmpty()) {
+            return "id = " + alice + " currently has no friends.";
+        }
+
+        // Log amount of friends
+        int numberOfFriendsForBob = friendsOfBob.size();
+        int numberOfFriendsForAlice = friendsOfAlice.size();
+        log.info("id = {} has {} friends.", bob, numberOfFriendsForBob);
+        log.info("id = {} has {} friends.", alice, numberOfFriendsForAlice);
+
+        // Setup title for common friends response
+        commonFriends.append(LINE_BREAK)
+                .append("Common Friends:");
 
         // Find common friends of Bob and Alice
-        commonFriends.append("Common Friends:")
-                .append(LINE_BREAK);
-
-        for (Person p : friendsOfBob) {
-            if (friendsOfAlice.contains(p)) {
-                String commonFriendId = insertRightPad(p.getId().toString(), 18);
-                String commonFriend = insertRightPad(p.getName(), 18);
-                //System.out.println(commonFriend + " is a common friend.");
-                commonFriends.append("id = ")
+        int commonFriendsCount = 0;
+        for (Person friendOfBob : friendsOfBob) {
+            if (friendsOfAlice.contains(friendOfBob)) {
+                commonFriendsCount++;
+                String commonFriendId = insertRightPad(friendOfBob.getId().toString(), 18);
+                String commonFriend = insertRightPad(friendOfBob.getName(), 18);
+                commonFriends.append(LINE_BREAK)
+                        .append("id = ")
                         .append(commonFriendId)
                         .append("name = ")
-                        .append(commonFriend)
-                        .append(LINE_BREAK);
+                        .append(commonFriend);
             }
+        }
+
+        // Validate that common friends exist. Print message accordingly.
+        if (commonFriendsCount == 0) {
+            commonFriends.append(LINE_BREAK)
+                    .append("id = ")
+                    .append(bob)
+                    .append(" and id = ")
+                    .append(alice)
+                    .append(" currently have no common friends.")
+                    .append(LINE_BREAK);
         }
 
         entityManager.close();
@@ -235,14 +266,15 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
     }
 
     /**
-     * Determines the person that has the most common interests with given id.
-     * We need to query person_has_interest.
-     * We call the queried person Bob.
-     * We call people with common interests Bob's peers.
-     * TODO We have no way of determining multiple peers if there should be more than one person with the same amount of common interest.
-     *
-     * @param id
-     * @return
+     * Determines the person or persons with the most common interests with given id.
+     * We need to query {@link PersonHasInterest}
+     * For sake of simplicity, we refer to the id as "Bob".
+     * We call people with common interests "Peers".
+     * Queries all of Bob's favorite tags, we refer to these as "Favorites".
+     * For each favorite, we find all peers and count their number of common interests.
+     * Then we determine all peers that have the highest amount of common interests.
+     * @param id the id of the person that is to be matched.
+     * @return person or persons with the most common interests.
      */
     @Override
     public String getPersonsWitMostCommonInterests(long id) throws NoSuchElementException {
@@ -252,39 +284,47 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
         EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
         StringBuilder peers = new StringBuilder();
 
+        // Setup query. Get all of Bob's interests
         String query = "SELECT c FROM PersonHasInterest c WHERE c.id.personId = :bob";
         Query typedQuery = entityManager.createQuery(query);
         typedQuery.setParameter("bob", id);
-        List<PersonHasInterest> resultList = typedQuery.getResultList();
+        List<PersonHasInterest> favoritesOfBob = typedQuery.getResultList();
+        validateQueryResults(favoritesOfBob);
 
+        // Setup Map for Bob's peers. Uses an Integer as Map value to count # of Common Likes for each person.
+        Map<Person, Integer> peerGroup = new HashMap<>();
+        // Keep track of the highest score. Update this while iterating through each Tag.
+        int highScore = 0;
 
-        Map<Person, Integer> commonInterestsOfPeers = new HashMap<>();
-        // TODO change tree map to Integer. We don't need a mapping, just the final score.
-        TreeMap<Integer, Person> highscores = new TreeMap<>();
+        // Create the set of Bobs favorite stuff. Iterate over every Favorite Tag
+        for (PersonHasInterest f : favoritesOfBob) {
+            Tag favorite = f.getTag();
 
-        // Create the set of Bobs favorite stuff
-        for (PersonHasInterest p : resultList) {
-            Tag tag = p.getTag();
-            //bobLikes.add(tag);
+            // Find all the other people that also like this favorite.
+            Set<PersonHasInterest> peopleWhoLikeFavorites = favorite.getLikes();
+            // For each favorite iterate over the set of people that also like that favorite
+            for (PersonHasInterest t : peopleWhoLikeFavorites) {
+                Person peer = t.getPerson();
 
-            // Find the other people that like the same stuff as Bob
-            Set<PersonHasInterest> tagLikedByOthers = tag.getLikes();
-            for (PersonHasInterest t : tagLikedByOthers) {
-                Person person = t.getPerson();
-                //peers.add(person);
-                // Add person and create new likes list if that person isn't already in the set
-                boolean personIsInPeerGroup = commonInterestsOfPeers.containsKey(person);
-                boolean personIsBob = person.getId() == id;
+                // Add peer and create new likes list if that peer isn't already in the set
+                boolean personIsInPeerGroup = peerGroup.containsKey(peer);
+                boolean personIsBob = peer.getId() == id;
 
+                // Make sure we don't add Bob to the list.
                 if (!personIsBob) {
+                    // Add peer if it isn't already in the peer group
                     if (!personIsInPeerGroup) {
-                        commonInterestsOfPeers.put(person, 0);
+                        peerGroup.put(peer, 0);
                     }
-                    // Update the likes count for that person
-                    int currentScore = commonInterestsOfPeers.get(person);
+                    // Update the likes count for that peer
+                    int currentScore = peerGroup.get(peer);
                     currentScore++;
-                    commonInterestsOfPeers.put(person, currentScore);
-                    highscores.put(currentScore, person);
+                    peerGroup.put(peer, currentScore);
+
+                    // Update high score if necessary
+                    if (currentScore > highScore) {
+                        highScore = currentScore;
+                    }
                 }
             }
         }
@@ -294,15 +334,14 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
                 .append(id)
                 .append(LINE_BREAK);
 
-        // Get all the persons who match the highscore
-        Integer highscore = highscores.lastKey();
-        Set<Map.Entry<Person, Integer>> entries = commonInterestsOfPeers.entrySet();
+        // Get all the persons who match the high score
+        Set<Map.Entry<Person, Integer>> entries = peerGroup.entrySet();
         for (Map.Entry<Person, Integer> entry : entries) {
-            if (entry.getValue().equals(highscore)) {
+            if (entry.getValue().equals(highScore)) {
                 Person peer = entry.getKey();
                 String peerId = insertRightPad(peer.getId().toString(), 18);
                 String peerName = insertRightPad(peer.getName(), 18);
-                String peerDegree = insertRightPad(highscore.toString(), 18);
+                String peerDegree = insertRightPad(String.valueOf(highScore), 18);
                 peers.append("id = ")
                         .append(peerId)
                         .append("name = ")
@@ -312,7 +351,6 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
                         .append(LINE_BREAK);
             }
         }
-
         log.debug("<-- getPersonsWitMostCommonInterests().");
         return peers.toString();
     }
@@ -344,9 +382,11 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
         String query = "SELECT c FROM PkpSymmetric c WHERE c.id.personId1 = :bob";
         Query typedQuery = entityManager.createQuery(query);
         typedQuery.setParameter("bob", id);
+
+        // Run Query
         List<PkpSymmetric> friendsOfBob = typedQuery.getResultList();
 
-        // Create friends list of Bob
+
         // Exit if Bob has no friends
         if (friendsOfBob.isEmpty()) {
             return "Person does not exist or has no friends.";
@@ -356,32 +396,33 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
         Person bob = friendsOfBob.get(0).getPerson1();
         City cityOfBob = bob.getCity();
         Country countryOfBob = cityOfBob.getIsPartOf();
-        //log.debug("{} {} lives in {}, {}", bob.getName(), bob.getSurname(), cityOfBob.getName(), countryOfBob.getName());
-        log.debug("name = {}", bob.getName());
-        log.debug("surename = {} ", bob.getSurname());
-        log.debug("city = {}", cityOfBob.getName());
-        log.debug("country = {}", cityOfBob.getIsPartOf().getName());
-
+        log.debug("{} {} lives in {}, {}", bob.getName(), bob.getSurname(), cityOfBob.getName(), countryOfBob.getName());
 
         // Determine current workplace and/or university of Bob
         Set<PersonWorksAt> employersOfBob = bob.getJobs();
         Set<PersonStudiesAt> unisOfOBob = bob.getUniversities();
         Company currentEmployerOfBob = getCurrentEmployerFor(bob);
         University currentUniOfBob = getCurrentUniversityFor(bob);
-
         log.debug("Studied last at {}", currentUniOfBob.getName());
 
-
+        // Setup title
         jobRecommendation.append("Job Recommendation for ")
                 .append(bob.getName())
                 .append(" ")
                 .append(bob.getSurname())
                 .append(LINE_BREAK);
+        /*
+           Iterate over friends of Bob. here are the rules for recommendation:
+           2. If friend is a student, Uni of friend is a candidate
+           3. If friend is a worker, Company of friends is a candidate
+         */
         for (PkpSymmetric f : friendsOfBob) {
             Person friend = f.getPerson2();
             log.debug("{} is a friend of {}", friend.getId(), bob.getId());
 
+
             // Determine if friend is currently working somewhere which applies for rules of recommendation
+            // TODO if we get the PersonWorksAt Object then we can compare years to StudyAt
             Company currentEmployerOfFriend = getCurrentEmployerFor(friend);
             if (currentEmployerOfFriend == null) {
                 continue;
@@ -452,7 +493,7 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
     /**
      * Finds current employer for a given list of jobs.
      * Expects a list generated by PersonWorksAt.
-     *
+     * TODO Return PersonWorksAt object rather than company. That way can access and compare the year to currentUni
      * @param
      * @return
      */
@@ -478,6 +519,7 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
         return currentEmployer;
     }
 
+    // TODO Return PersonStudiesAt object rather than University. That way can access and compare the year to currentEmployer
     private University getCurrentUniversityFor(Person person) {
         log.debug("--> getCurrentUniversityFor().");
 

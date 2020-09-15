@@ -71,7 +71,7 @@ public class TransactionHandler {
             log.info(queryResult);
 
         } catch (NoResultException | NoSuchElementException e) {
-            log.info("No result found for given query.");
+            //log.info("No result found for given query.");
             log.debug("NoResultException.", e);
         } catch (Exception e) {
             log.error("Something went wrong here.", e);

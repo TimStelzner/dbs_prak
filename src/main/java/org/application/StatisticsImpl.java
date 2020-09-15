@@ -6,6 +6,7 @@ import org.tables.Comment;
 import org.tables.Country;
 import org.tables.TagClass;
 import org.tables.composite.TagClassIsSubclassOf;
+import org.utilities.ConsoleUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;

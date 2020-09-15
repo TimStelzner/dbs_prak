@@ -2,6 +2,7 @@ package org.application;
 
 import lombok.extern.slf4j.Slf4j;
 import org.Main;
+import org.utilities.ConsoleUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
