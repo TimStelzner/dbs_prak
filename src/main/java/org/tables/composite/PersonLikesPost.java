@@ -9,6 +9,9 @@ import org.tables.composite.keys.PersonLikesPostKey;
 import javax.persistence.*;
 import java.sql.Date;
 
+/**
+ * Provides Hibernate Mappings for table relation person_likes_post.
+ */
 @Entity
 @Getter
 @Setter

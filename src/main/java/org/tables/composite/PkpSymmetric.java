@@ -10,6 +10,9 @@ import org.tables.composite.keys.PersonKnowsPersonKey;
 
 import javax.persistence.*;
 
+/**
+ * Provides Hibernate Mappings for table view pkp_symmetric.
+ */
 @Entity
 @Table(name = "pkp_symmetric")
 @Subselect("select * from pkp_symmetric")

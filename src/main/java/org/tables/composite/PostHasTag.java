@@ -8,6 +8,9 @@ import org.tables.composite.keys.PostHasTagKey;
 
 import javax.persistence.*;
 
+/**
+ * Provides Hibernate Mappings for table relation post_has_tag.
+ */
 @Entity
 @Getter
 @Setter

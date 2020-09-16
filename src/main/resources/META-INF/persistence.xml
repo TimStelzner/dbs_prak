@@ -62,7 +62,7 @@
             <!-- Disables autocommit for the JDBC connections in the connection pool. Should always be false. Autocommit mode allows each individual SQL statement to be executed in its own transaction.-->
             <property name="hibernate.connection.autocommit" value="false"/>
             <!-- <property name="hibernate.show_sql" value="true"/> -->
-            <!-- Allos snake to camel case conversions -->
+            <!-- Allows snake to camel case conversions -->
             <property name="hibernate.physical_naming_strategy"
                       value="com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy"/>
 

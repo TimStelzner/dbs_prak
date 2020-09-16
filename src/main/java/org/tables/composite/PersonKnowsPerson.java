@@ -8,6 +8,9 @@ import org.tables.composite.keys.PersonKnowsPersonKey;
 import javax.persistence.*;
 import java.sql.Date;
 
+/**
+ * Provides Hibernate Mappings for table relation person_knows_person.
+ */
 @Entity
 @Getter
 @Setter

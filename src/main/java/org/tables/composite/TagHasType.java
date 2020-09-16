@@ -8,7 +8,9 @@ import org.tables.composite.keys.TagHasTypeKey;
 
 import javax.persistence.*;
 
-
+/**
+ * Provides Hibernate Mappings for table relation tag_has_type.
+ */
 @Entity
 @Getter
 @Setter

@@ -9,6 +9,9 @@ import org.tables.composite.keys.PersonLikesCommentKey;
 import javax.persistence.*;
 import java.sql.Date;
 
+/**
+ * Provides Hibernate Mappings for table relation person_likes_comment.
+ */
 @Entity
 @Getter
 @Setter

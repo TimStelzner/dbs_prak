@@ -8,6 +8,9 @@ import org.tables.composite.keys.PersonStudiesAtKey;
 
 import javax.persistence.*;
 
+/**
+ * Provides Hibernate Mappings for table relation person_studies_at.
+ */
 @Entity
 @Getter
 @Setter

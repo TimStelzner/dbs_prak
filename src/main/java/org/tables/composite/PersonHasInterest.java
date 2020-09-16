@@ -8,6 +8,9 @@ import org.tables.composite.keys.PersonHasInterestKey;
 
 import javax.persistence.*;
 
+/**
+ * Provides Hibernate Mappings for table relation person_has_interest.
+ */
 @Entity
 @Getter
 @Setter

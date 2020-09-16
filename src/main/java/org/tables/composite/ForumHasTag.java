@@ -8,6 +8,9 @@ import org.tables.composite.keys.ForumHasTagKey;
 
 import javax.persistence.*;
 
+/**
+ * Provides Hibernate Mappings for table relation forum_has_tag.
+ */
 @Entity
 @Getter
 @Setter

@@ -7,8 +7,16 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 
-//@Entity
-//@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+/**
+ * Provides Hibernate Mappings for table relation message.
+ * Note, this is a mapped superclass, thus Hibernate cannot access the database tables.
+ * Use the child classes to access the database entities instead.
+ * Note, the Foreign keys for person_id and country_id are implementend in the child classes,
+ * because they caused Hibernate to create unwanted database overwrites.
+ *
+ * @see org.tables.Post
+ * @see org.tables.Comment
+ */
 @MappedSuperclass
 @Getter
 @Setter

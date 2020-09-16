@@ -14,7 +14,7 @@ import javax.persistence.MappedSuperclass;
 })
 
 /**
- * Required to simulate arrays as primitive types for database.
+ * Simulates arrays as primitive types for database.
  * Classes with arrays need to extend this class.
  * Use @Type(type = "string-array") to implement the array type.
  */

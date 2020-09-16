@@ -7,6 +7,9 @@ import org.tables.composite.keys.TagClassIsSubclassOfKey;
 
 import javax.persistence.*;
 
+/**
+ * Provides Hibernate Mappings for table relation tag_class_is_subclass_of.
+ */
 @Entity
 @Getter
 @Setter

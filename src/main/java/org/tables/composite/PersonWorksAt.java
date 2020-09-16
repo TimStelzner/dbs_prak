@@ -8,6 +8,9 @@ import org.tables.composite.keys.PersonWorksAtKey;
 
 import javax.persistence.*;
 
+/**
+ * Provides Hibernate Mappings for table relation person_works_at.
+ */
 @Entity
 @Getter
 @Setter

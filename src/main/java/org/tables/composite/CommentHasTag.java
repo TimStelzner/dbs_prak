@@ -8,6 +8,9 @@ import org.tables.composite.keys.CommentHasTagKey;
 
 import javax.persistence.*;
 
+/**
+ * Provides Hibernate Mappings for table relation comment_has_tag.
+ */
 @Entity
 @Setter
 @Getter
