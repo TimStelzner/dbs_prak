@@ -1,5 +1,6 @@
 package org.utilities;
 
+// TODO implement Strings for Statistics and PersonRelated.
 public class SqlUtils {
     public static final String CITY = "City";
     public static final String PERSON = "Person";
@@ -20,5 +21,4 @@ public class SqlUtils {
     public static final String FORUM_HAS_TAG = "ForumHasTag";
     public static final String POST_HAS_TAG = "PostHasTag";
     public static final String COMMENT_HAS_TAG = "CommentHasTag";
-
 }

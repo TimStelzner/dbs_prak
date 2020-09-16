@@ -6,14 +6,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-// TODO Should put this in UserInterface
-
 /**
  * Provides utility methods for the user interface and console input/output.
  */
 @Slf4j
 public abstract class ConsoleUtils {
-    // TODO Is this the best approach? We have another scanner object in UserInterface. Yuck!
+    // TODO Scanner object should be handled by UserInterface and not here.
     protected static long getUserInput() {
         log.debug("--> processUserInput().");
 

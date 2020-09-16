@@ -1,11 +1,7 @@
 package org.application;
 
-import java.util.List;
-
 public interface PersonRelatedAPI {
     String LINE_BREAK = "\n";
-    String TAB = "\t";
-    // TODO Use System.getProperty("line.separator") instead
 
     String getProfile(long id);
 
