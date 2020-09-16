@@ -47,6 +47,4 @@ dependencies {
     implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.9.13'
     implementation group: 'org.apache.commons', name: 'commons-text', version: '1.9'
     // Used for Apache Commons Configuration Files
-    implementation group: 'commons-configuration', name: 'commons-configuration', version: '1.10'
-    implementation group: 'org.simpleframework', name: 'simple-xml', version: '2.7.1'
 }
