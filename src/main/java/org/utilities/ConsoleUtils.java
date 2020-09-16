@@ -36,6 +36,7 @@ public abstract class ConsoleUtils {
 
     /**
      * Provides white space padding for a long list to help left-align its columns.
+     * Prettifies column based console output.
      * Takes a string and pads the right side with white space characters
      * until it reaches the given final length.
      *

@@ -80,27 +80,6 @@ public class UserInterface extends ConsoleUtils {
         close();
     }
 
-    /*
-    private long getUserInput() {
-        log.debug("--> processUserInput().");
-        long userInput = -1;
-        try {
-            String input = scanner.readLine();
-            userInput = Long.parseLong(input);
-            log.debug("You typed {}", input);
-        } catch (NumberFormatException e) {
-            log.info("You did not enter a number.");
-            return -1;
-        } catch (IOException e) {
-            log.error("IOException occurred.", e);
-        } finally {
-            log.debug("<-- processUserInput(). Return [{}]", userInput);
-        }
-        return userInput;
-    }
-
-     */
-
     /**
      * Figure out how often the user needs to be prompted for a user id.
      *

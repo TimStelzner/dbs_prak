@@ -17,13 +17,13 @@ public class TransactionHandler {
         statisticsRelated = new StatisticsImpl();
     }
 
+    // TODO Use a list rather than ... varargs
     public String runTransactionFor(int option, long... ids) {
         log.debug("--> runTransactionFor(option = {}, id = {})", option, ids);
         String queryResult = "";
         long id = 0;
         long id2 = 0;
         try {
-
             // Setup id parameters according to varargs
             if (ids.length > 0) {
                 id = ids[0];
@@ -31,13 +31,6 @@ public class TransactionHandler {
                     id2 = ids[1];
                 }
             }
-            /*
-            else {
-                throw new Exception("Method has received no parameters. At least 1 is required.");
-            }
-
-             */
-
             // Process option and run corresponding method
             switch (option) {
                 case 1:
@@ -71,7 +64,6 @@ public class TransactionHandler {
             log.info(queryResult);
 
         } catch (NoResultException | NoSuchElementException e) {
-            //log.info("No result found for given query.");
             log.debug("NoResultException.", e);
         } catch (Exception e) {
             log.error("Something went wrong here.", e);
@@ -82,7 +74,10 @@ public class TransactionHandler {
     }
 
     public void closeTransactionHandler() {
-        // TODO personRelated is missing
+        log.debug("--> closeTransactionHandler.");
         statisticsRelated.closeStatistics();
+        personRelated.closePersonRelated();
+        log.debug("<-- closeTransactionHandler.");
+
     }
 }

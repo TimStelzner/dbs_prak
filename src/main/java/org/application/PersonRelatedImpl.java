@@ -15,13 +15,28 @@ import java.util.*;
 
 @Slf4j
 public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI {
+    private final EntityManager entityManager;
 
+    public PersonRelatedImpl() {
+        entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
+    }
+
+    public void closePersonRelated() {
+        entityManager.close();
+    }
+
+    /**
+     * Finds all personal information for a given id.
+     * Uses database table "person" and creates a prettified output.
+     *
+     * @param id
+     * @return all the fields in a prettified String.
+     */
     @Override
     public String getProfile(long id) {
         log.debug("--> getProfile().");
 
         // Setup variables
-        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
         StringBuilder profile = new StringBuilder();
         Person person = null;
 
@@ -90,17 +105,24 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
         profile.replace(lastCommaPosition, lastCommaPosition + 1, "]");
         profile.append(LINE_BREAK);
 
-        entityManager.close();
         log.debug("<-- getProfile().");
         return profile.toString();
     }
 
+    /**
+     * Gets all common interests of a given id with all his or her friends.
+     * We define a common interest as a tag_id match from database table "person_has_interest".
+     * Uses database table "pkp_symmetric".
+     * Creates a prettified list with tag id and person for each common interest.
+     *
+     * @param id
+     * @return the prettified list as a String.
+     */
     @Override
     public String getCommonInterestsOfMyFriends(long id) {
         log.debug("--> getCommonInterestsOfMyFriends(id = {})", id);
 
         // Setup variables
-        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
         StringBuilder interests = new StringBuilder();
 
         // Setup query. Assume the referenced person from id is called Bob.
@@ -109,7 +131,7 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
         Query typedQuery = entityManager.createQuery(query);
         typedQuery.setParameter("bob", id);
 
-        // Run query. These are all friends of Bob.
+        // Run query. These are all the friends of Bob.
         List<PkpSymmetric> bobsFriends = typedQuery.getResultList();
 
         // Exit if Bob has no friends
@@ -129,29 +151,21 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
             log.debug("Adding {} to Bobs favorite tags.", tagId);
         }
 
+        // Create output title
         interests.append(LINE_BREAK)
                 .append(bob)
                 .append("'s Common Interests With Friends")
                 .append(LINE_BREAK);
-        //System.out.println("friends of " + bob);
+        // Iterate over Bob's friends and finds all common interests.
         for (PkpSymmetric friendOfBob : bobsFriends) {
-            //System.out.println(friendOfBob.getId().getPersonId1() + " | " + friendOfBob.getId().getPersonId2());
-
             Set<PersonHasInterest> stuffFriendLikes = friendOfBob.getPerson2().getLikes();
-
             // Build common interests
-
             for (PersonHasInterest interest : stuffFriendLikes) {
-                //Tag tag = interest.getTag();
-                //System.out.println(interest.getPerson().getId() + " likes " + tag.getId());
                 Long tagId = interest.getTag().getId();
                 if (bobsFavoriteTags.contains(tagId)) {
-                    //log.debug("tagId = {} is something Bob likes too", tagId);
-                    //System.out.println("tag_id = " + interest.getTag().getId() + " name = " + interest.getPerson().getName());
                     // Get Id and name and prettify the output
                     String printId = insertRightPad(interest.getTag().getId().toString(), 12);
                     String printName = insertRightPad(interest.getPerson().getName(), 12);
-
                     interests.append("tag_id = ")
                             .append(printId)
                             .append("name = ")
@@ -160,12 +174,15 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
                 }
             }
         }
-
-        entityManager.close();
         log.debug("<-- getCommonInterestsOfMyFriends().");
         return interests.toString();
     }
 
+    /**
+     * Utility method that checks whether any results have been found for a given query.
+     *
+     * @param result
+     */
     private void validateQueryResults(List result) {
         if (result.isEmpty()) {
             System.out.println("No results were found for this query. Person does not exist or has no friends.");
@@ -173,20 +190,19 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
         }
     }
 
-
     /**
      * Finds common friends of two given person ids.
      * For sake of simplicity, we refer to the first id as "Bob" and to the second id as "Alice".
      * Note, these do not represent the names of those persons from the database.
-     *
+     * Uses database table "pkp_symmetric".
+     * Creates a prettified list with person id and name for each common friend.
      * @param bob
      * @param alice
-     * @return
+     * @return the prettified list of common friends as a String.
      */
     public String getCommonFriends(long bob, long alice) {
         log.debug("--> getCommonFriends(bob={}, alice={})", bob, alice);
         // Setup variables
-        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
         StringBuilder commonFriends = new StringBuilder();
 
         // Setup query. Find all friends of Bob and Alice mixed together.
@@ -259,29 +275,26 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
                     .append(" currently have no common friends.")
                     .append(LINE_BREAK);
         }
-
-        entityManager.close();
         log.debug("<-- getCommonFriends().");
         return commonFriends.toString();
     }
 
     /**
      * Determines the person or persons with the most common interests with given id.
-     * We need to query {@link PersonHasInterest}
+     * Uses database table "person_has_interest" via {@link PersonHasInterest}
      * For sake of simplicity, we refer to the id as "Bob".
      * We call people with common interests "Peers".
      * Queries all of Bob's favorite tags, we refer to these as "Favorites".
      * For each favorite, we find all peers and count their number of common interests.
      * Then we determine all peers that have the highest amount of common interests.
      * @param id the id of the person that is to be matched.
-     * @return person or persons with the most common interests.
+     * @return person or persons with the most common interests as a String.
      */
     @Override
     public String getPersonsWitMostCommonInterests(long id) throws NoSuchElementException {
         log.debug("--> getPersonsWitMostCommonInterests(id = {})", id);
 
         // Setup variables
-        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
         StringBuilder peers = new StringBuilder();
 
         // Setup query. Get all of Bob's interests
@@ -328,7 +341,7 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
                 }
             }
         }
-
+        // Create title for output
         peers.append(LINE_BREAK)
                 .append("Persons that share most interest with ")
                 .append(id)
@@ -364,19 +377,19 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
      * located in the same city (since universities are located in cities).
      * We define a current university as the university id with the highest "classYear" value in PersonStudiesAt.
      * Search will stop as soon as either a company or university is found.
-     * TODO we could compare the year of work and study tables and conclude that a person is either
-     * TODO a student, a worker or both and then exclude job/uni accordingly.
      *
      * @param id
-     * @return
+     * @return a job or uni recommendation if it exists as a String.
      */
+    // TODO We could compare the year of work and study tables and conclude that a person is either a student,
+    //  a worker or both and then exclude job/uni accordingly.
     @Override
     public String getJobRecommendation(long id) {
         log.debug("--> getJobRecommendation(id = {}).", id);
 
         // Setup variables
-        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
         StringBuilder jobRecommendation = new StringBuilder();
+        boolean recommendationFound = false;
 
         // Setup query. Assume the referenced person from id is called Bob.
         String query = "SELECT c FROM PkpSymmetric c WHERE c.id.personId1 = :bob";
@@ -385,7 +398,6 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
 
         // Run Query
         List<PkpSymmetric> friendsOfBob = typedQuery.getResultList();
-
 
         // Exit if Bob has no friends
         if (friendsOfBob.isEmpty()) {
@@ -411,19 +423,15 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
                 .append(" ")
                 .append(bob.getSurname())
                 .append(LINE_BREAK);
-        /*
-           Iterate over friends of Bob. here are the rules for recommendation:
-           2. If friend is a student, Uni of friend is a candidate
-           3. If friend is a worker, Company of friends is a candidate
-         */
+
+        // Iterate over Bob's friends, attempt to find Uni or Company match. Stop immediately on a match.
         for (PkpSymmetric f : friendsOfBob) {
             Person friend = f.getPerson2();
             log.debug("{} is a friend of {}", friend.getId(), bob.getId());
 
-
             // Determine if friend is currently working somewhere which applies for rules of recommendation
-            // TODO if we get the PersonWorksAt Object then we can compare years to StudyAt
             Company currentEmployerOfFriend = getCurrentEmployerFor(friend);
+            // If friend has no jobs, skip to next friend.
             if (currentEmployerOfFriend == null) {
                 continue;
             }
@@ -449,6 +457,7 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
                             .append(currentEmployerOfFriend.getName())
                             .append("\t id = ")
                             .append(currentEmployerOfFriend.getId());
+                    recommendationFound = true;
                     break;
                 }
             }
@@ -480,23 +489,26 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
                             .append(currentUniOfFriend.getName())
                             .append("\t id = ")
                             .append(currentUniOfFriend.getId());
+                    recommendationFound = true;
                     break;
                 }
             }
         }
+        if (!recommendationFound) {
+            jobRecommendation.append("No job recommendation can be made at this point.");
+        }
 
-        entityManager.close();
         log.debug("<-- getJobRecommendation().");
         return jobRecommendation.toString();
     }
 
     /**
-     * Finds current employer for a given list of jobs.
-     * Expects a list generated by PersonWorksAt.
-     * TODO Return PersonWorksAt object rather than company. That way can access and compare the year to currentUni
-     * @param
-     * @return
+     * Finds current employer for a given person.
+     * We define current employer as the company with the highest workFrom value in {@link PersonWorksAt}
+     * @param person The given person to be queried.
+     * @return current University, null if none exist.
      */
+    // TODO To compare years, we should return PersonWorksAt object rather than company.
     private Company getCurrentEmployerFor(Person person) {
         log.debug("--> getCurrentJobFor().");
         Company currentEmployer = null;
@@ -519,7 +531,14 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
         return currentEmployer;
     }
 
-    // TODO Return PersonStudiesAt object rather than University. That way can access and compare the year to currentEmployer
+    /**
+     * Finds current university for a given person.
+     * We define current university as the uni with the highest classYear value in {@link PersonStudiesAt}
+     *
+     * @param person The given person to be queried.
+     * @return current University, null if none exist.
+     */
+    // TODO To compare years, we should return PersonStudiesAt object rather than company.
     private University getCurrentUniversityFor(Person person) {
         log.debug("--> getCurrentUniversityFor().");
 
@@ -542,25 +561,23 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
         return currentUni;
     }
 
-
-    // TODO Need to handle case where user typed the same id twice
-    // TODO What happens when second id doesnt exist? Both? First?
+    /**
+     * Finds the shortest path of familiarity between two given ids.
+     * We define a path of familiarity as the sequence of befriended people.
+     * where each two successive people are friends.
+     * Uses stored procedure {@link FamiliarityPath}.
+     *
+     * @param id
+     * @param id2
+     * @return all shortest paths of similarity as a String.
+     */
     @Override
     public String getShortestFriendshipPath(long id, long id2) {
         log.debug("--> getShortestFriendshipPath().");
         // Setup variables
-        EntityManager entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
         StringBuilder shortestPath = new StringBuilder();
 
-
         // Defined stored procedure
-        /*
-        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("my_function");
-        query.registerStoredProcedureParameter("id1", Long.class, ParameterMode.IN);
-        query.registerStoredProcedureParameter("id2", Long.class, ParameterMode.IN );
-        query.registerStoredProcedureParameter("table", Query.class, ParameterMode.OUT);
-         */
-
         StoredProcedureQuery query = entityManager.createNamedStoredProcedureQuery("myFunction");
 
         // set input parameter
@@ -570,27 +587,26 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
         // call the stored procedure and get the result
         query.execute();
         List<FamiliarityPath> resultList = query.getResultList();
-        shortestPath.append("Shortest paths from ")
+
+        // Setup title for output
+        shortestPath.append(LINE_BREAK)
+                .append("Shortest paths from ")
                 .append(id)
                 .append(" to ")
                 .append(id2)
                 .append(LINE_BREAK);
-        for (FamiliarityPath r : resultList) {
-            shortestPath.append(r.getPathString())
-                    .append(LINE_BREAK);
+
+        // Check if query has returned any results.
+        if (resultList.isEmpty()) {
+            shortestPath.append("Persons either do not know each other or do not exist.");
+        } else {
+            // Add each familiarity path to the output.
+            for (FamiliarityPath r : resultList) {
+                shortestPath.append(r.getPathString())
+                        .append(LINE_BREAK);
+            }
         }
-
-        // Query typedQuery = (Query) query.getOutputParameterValue("table");
-        //List<FamiliarityPath> resultList = typedQuery.getResultList();
-
-
-        //Integer increment = (Integer)query.getOutputParameterValue("increment");
-        //log.info("Calculation result  = " + increment);
-
         log.debug("<-- getShortestFriendshipPath().");
-
-        //shortestPath.append(increment);
-        entityManager.close();
         return shortestPath.toString();
     }
 }
