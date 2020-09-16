@@ -13,6 +13,9 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Provides Hibernate Mappings for table relation "person".
+ */
 @Entity
 @Getter
 @Setter

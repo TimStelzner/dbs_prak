@@ -6,7 +6,12 @@ import lombok.Setter;
 import javax.persistence.*;
 
 /**
- * Implements place table.
+ * Provides Hibernate Mappings for table relation "place".
+ * Note, this is a mapped superclass, thus Hibernate cannot access the database tables.
+ * Use the child classes to access the database entities instead.
+ *
+ * @see org.tables.Company
+ * @see org.tables.University
  */
 @Getter
 @Setter

@@ -8,6 +8,9 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Provides Hibernate Mappings for table relation "tag_class".
+ */
 @Entity
 @Getter
 @Setter

@@ -8,15 +8,10 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-/*
-@AttributeOverrides( {
-        @AttributeOverride(name = "personId", column = @Column(name = "person_id")),
-        @AttributeOverride(name = "countryId", column = @Column(name = "country_id"))
-})
-
-
+/**
+ * Provides Hibernate Mappings for table relation "post".
  */
+@Entity
 @Getter
 @Setter
 public class Post extends Message {

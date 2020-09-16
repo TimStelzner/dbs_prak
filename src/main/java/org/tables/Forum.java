@@ -8,6 +8,9 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Provides Hibernate Mappings for table relation "forum".
+ */
 @Entity
 @Getter
 @Setter
@@ -26,22 +29,6 @@ public class Forum {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "forum_person_id_fkey"))
     private Person person;
-
-    /*
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(name = "forum_has_member",
-            joinColumns = {@JoinColumn(name = "forum_id")},
-            inverseJoinColumns = {@JoinColumn(name = "person_id")})
-    private Set<Person> persons = new HashSet<>();
-
-
-
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(name = "forum_has_tag",
-            joinColumns = {@JoinColumn(name = "forum_id")},
-            inverseJoinColumns = {@JoinColumn(name = "tag_id")})
-    private Set<Tag> tags = new HashSet<>();
-    */
 
     @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Post> posts = new HashSet<>();

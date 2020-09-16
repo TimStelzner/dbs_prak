@@ -5,6 +5,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+/**
+ * Provides Hibernate Mappings for table relation "organisation".
+ */
 @MappedSuperclass @Getter @Setter
 public class Organisation {
 

@@ -5,6 +5,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+/**
+ * Provides Hibernate Mappings for the stored procedure "my_function".
+ * TODO Change name of stored procedure to something more readable.
+ */
 @Entity
 @Getter
 @Setter
