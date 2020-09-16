@@ -36,6 +36,9 @@ public class UserInterface extends ConsoleUtils {
         log.debug("<-- displayUserInterface().");
     }
 
+    /**
+     * Initializes class variables, gets custom values for Interface content, starts transactionHandler.
+     */
     private void initialize() {
         log.debug("--> initialize().");
         try {
@@ -52,6 +55,9 @@ public class UserInterface extends ConsoleUtils {
         }
     }
 
+    /**
+     * Closes class variables.
+     */
     private void close() {
         try {
             System.out.println("Good Bye!");
@@ -62,6 +68,12 @@ public class UserInterface extends ConsoleUtils {
         }
     }
 
+    /**
+     * Runs the Loop for the Main Menu.
+     * Keeps running until the user enters exit code.
+     *
+     * @throws IOException
+     */
     private void runMainMenu() throws IOException {
 
         boolean userIsRequestingInputs = true;
@@ -81,19 +93,24 @@ public class UserInterface extends ConsoleUtils {
     }
 
     /**
-     * Figure out how often the user needs to be prompted for a user id.
-     *
+     * Figures out how often the user needs to be prompted for a user id.
+     * Runs {@link TransactionHandler} after user input has been processed.
      * @param option
      */
     private void processUserInput(int option) {
         log.debug("--> processUserInput().");
         Long userId = null;
         Long userId2 = null;
-        // TODO for tagClassHierarchy we have to enter a tag class id not user id
-        // TODO for popularComment we have to enter a minimum number of likes
         // Prompt the user for either 1 or 2 person ids.
         if (option > 0 && option < 9) {
-            System.out.println("Enter user id");
+            // Change prompt according to given option
+            if (option == 7) {
+                System.out.println("Enter tag class id");
+            } else if (option == 8) {
+                System.out.println("Enter a minimum number of likes");
+            } else {
+                System.out.println("Enter user id");
+            }
             userId = Long.valueOf(getUserInput());
         } else if (option != 9) {
             System.out.println("You must enter a valid option.");
@@ -102,7 +119,6 @@ public class UserInterface extends ConsoleUtils {
             System.out.println("Enter second user id");
             userId2 = Long.valueOf(getUserInput());
         }
-
         // Run TransactionHandler
         if (userId == null) {
             transactionHandler.runTransactionFor(option);
@@ -111,9 +127,6 @@ public class UserInterface extends ConsoleUtils {
         } else {
             transactionHandler.runTransactionFor(option, userId, userId2);
         }
-
         log.debug("<-- processUserInput().");
     }
-
-
 }

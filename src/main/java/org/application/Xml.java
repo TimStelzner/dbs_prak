@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Implements XML Parser capabilities.
+ * Enables XML imports as lists.
  * Taken from https://argonrain.wordpress.com/about/xml-java/
  */
 public class Xml {

@@ -17,6 +17,15 @@ public class TransactionHandler {
         statisticsRelated = new StatisticsImpl();
     }
 
+    /**
+     * Runs transaction query according to input.
+     * Uses {@link PersonRelatedImpl} and {@link StatisticsImpl}.
+     * Takes the query result and passes it back to {@link UserInterface}
+     *
+     * @param option
+     * @param ids
+     * @return the result of the query as a String.
+     */
     // TODO Use a list rather than ... varargs
     public String runTransactionFor(int option, long... ids) {
         log.debug("--> runTransactionFor(option = {}, id = {})", option, ids);
@@ -73,11 +82,13 @@ public class TransactionHandler {
         return queryResult;
     }
 
+    /**
+     * Closes TransactionHandler by running closing methods for class objects.
+     */
     public void closeTransactionHandler() {
         log.debug("--> closeTransactionHandler.");
         statisticsRelated.closeStatistics();
         personRelated.closePersonRelated();
         log.debug("<-- closeTransactionHandler.");
-
     }
 }

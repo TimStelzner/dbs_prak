@@ -12,6 +12,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.*;
 
+/**
+ * Implements statistics related methods according to {@link StatisticAPI}.
+ */
 @Slf4j
 public class StatisticsImpl extends ConsoleUtils implements StatisticAPI {
 
@@ -21,10 +24,20 @@ public class StatisticsImpl extends ConsoleUtils implements StatisticAPI {
         entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
     }
 
+    /**
+     * Closes class variables.
+     */
     public void closeStatistics() {
         entityManager.close();
     }
 
+    /**
+     * Finds all the children classes of a given tag class id.
+     * Creates a tree based taxonomy and prettifies the output as a hierarchy.
+     *
+     * @param tagId
+     * @return the prettified tag class hierarchy as a String.
+     */
     @Override
     public String getTagClassHierarchy(long tagId) {
         log.debug("--> getTagClassHierarchy(tagId = {})", tagId);
@@ -38,13 +51,19 @@ public class StatisticsImpl extends ConsoleUtils implements StatisticAPI {
         // Run query
         List<TagClassIsSubclassOf> resultList = typedQuery.getResultList();
 
+        // Check query result
         if (resultList.isEmpty()) {
             return "Tag class does not exist or has no children.";
         }
+
+        // Setup variables for result
         TagClass root = resultList.get(0).getParentTag();
         Map<String, TagClass> tagClassTreemap = new LinkedHashMap<>();
+
+        // Recursively build the tag hierarchy.
         buildTagHierarchy(root, "1", tagClassTreemap);
 
+        // Build output
         Set<Map.Entry<String, TagClass>> entrySet = tagClassTreemap.entrySet();
         for (Map.Entry<String, TagClass> e : entrySet) {
             String key = insertRightPad(e.getKey(), 12);
@@ -53,43 +72,32 @@ public class StatisticsImpl extends ConsoleUtils implements StatisticAPI {
                     .append(key)
                     .append(tagClassName);
         }
-
-        /*
-        int counter = 1;
-        //log.info(counter + " : " + tagId);
-        for (TagClassIsSubclassOf r : resultList) {
-            // TODO recursively iterate through resultList
-            TagClass childTag = r.getChildTag();
-            //log.info(counter + " : " + childTag.getId());
-            buildTagHierarchy(childTag, String.valueOf(counter), tagClassTreemap);
-            counter++;
-        }
-
-         */
-
-
         log.debug("<-- getTagClassHierarchy(tagId = {})", tagId);
         return hierarchy.toString();
     }
 
+    /**
+     * Utility method for {@link StatisticsImpl#getTagClassHierarchy(long)}.
+     * Recursively iterates over all children of given tag class.
+     * During each step of recursion, upates the given hierarchy and keeps track of depth of hierarchy.
+     *
+     * @param node      the node to be checked for children.
+     * @param depth     The current depth.
+     * @param hierarchy the hierarchy to be updated.
+     */
     private void buildTagHierarchy(TagClass node, String depth, Map<String, TagClass> hierarchy) {
         log.debug("--> buildTagHierarchy(node = {}, {})", node.getId(), node.getName());
-        //Set<TagClass> children = extractChildNodes(node.getChildren());
         Set<TagClassIsSubclassOf> children = node.getParentOf();
         log.debug("children size = {}", children.size());
 
+        // Update hierarchy
         hierarchy.put(depth, node);
-
-        log.debug("{} : {}", depth, node.getName());
+        // Check for children of given node. Start recursion for each child.
         boolean nodeHasChildren = !children.isEmpty();
         if (nodeHasChildren) {
             int counter = 1;
             for (TagClassIsSubclassOf c : children) {
                 String newDepth = depth + "." + counter;
-                //Long childId = c.getChildTag().getId();
-                //Long parentId = c.getParentTag().getId();
-                //log.info("child id = {} ", childId);
-                //log.info("parent id = {}", parentId);
                 buildTagHierarchy(c.getChildTag(), newDepth, hierarchy);
                 counter++;
             }
@@ -97,15 +105,13 @@ public class StatisticsImpl extends ConsoleUtils implements StatisticAPI {
         log.debug("<-- buildTagHierarchy");
     }
 
-    private Set<TagClass> extractChildNodes(Set<TagClassIsSubclassOf> children) {
-        Set<TagClass> childNodes = new HashSet<>();
-        for (TagClassIsSubclassOf c : children) {
-            TagClass tagClass = c.getChildTag();
-            childNodes.add(tagClass);
-        }
-        return childNodes;
-    }
-
+    /**
+     * Finds all comments that have more likes than the given parameter.
+     * Queries database via {@link Comment}.
+     *
+     * @param likes
+     * @return
+     */
     @Override
     public String getPopularComments(int likes) {
         log.debug("--> getPopularComments().");
@@ -119,6 +125,11 @@ public class StatisticsImpl extends ConsoleUtils implements StatisticAPI {
         // Run query
         List<Comment> resultList = typedQuery.getResultList();
 
+        popularComments.append(LINE_BREAK)
+                .append("Comments with more than ")
+                .append(likes)
+                .append(" likes:");
+
         // Build Comments
         for (Comment comment : resultList) {
             String id = insertRightPad(comment.getId().toString(), 18);
@@ -130,13 +141,18 @@ public class StatisticsImpl extends ConsoleUtils implements StatisticAPI {
                     .append(id)
                     .append("Name = ")
                     .append(fullName);
-
         }
-
         log.debug("<-- getPopularComments().");
         return popularComments.toString();
     }
 
+    /**
+     * Finds the country with most Posts and Comments combined.
+     *
+     * @return
+     * @see org.tables.Post
+     * @see Comment
+     */
     @Override
     public String getMostPostingCountry() {
         log.debug("--> getMostPostingCountry().");
@@ -164,7 +180,7 @@ public class StatisticsImpl extends ConsoleUtils implements StatisticAPI {
         // Build String
         Country mostPostingCountry = countries.pop();
         mostMessages.append(LINE_BREAK)
-                .append("Most post country: ")
+                .append("Most posting country: ")
                 .append(mostPostingCountry.getName())
                 .append(" with ")
                 .append(mostPostingCountry.getPosts().size())

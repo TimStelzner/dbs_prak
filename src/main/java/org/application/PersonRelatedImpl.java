@@ -13,6 +13,9 @@ import org.utilities.ConsoleUtils;
 import javax.persistence.*;
 import java.util.*;
 
+/**
+ * Implements person related methods according to {@link PersonRelatedAPI}.
+ */
 @Slf4j
 public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI {
     private final EntityManager entityManager;
@@ -21,6 +24,9 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
         entityManager = Main.ENTITY_MANAGER_FACTORY.createEntityManager();
     }
 
+    /**
+     * Closes class variables.
+     */
     public void closePersonRelated() {
         entityManager.close();
     }
@@ -114,7 +120,6 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
      * We define a common interest as a tag_id match from database table "person_has_interest".
      * Uses database table "pkp_symmetric".
      * Creates a prettified list with tag id and person for each common interest.
-     *
      * @param id
      * @return the prettified list as a String.
      */
@@ -180,7 +185,6 @@ public class PersonRelatedImpl extends ConsoleUtils implements PersonRelatedAPI 
 
     /**
      * Utility method that checks whether any results have been found for a given query.
-     *
      * @param result
      */
     private void validateQueryResults(List result) {
